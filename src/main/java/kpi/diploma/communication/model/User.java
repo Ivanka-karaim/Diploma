@@ -6,6 +6,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Set;
+
 @Builder
 
 @AllArgsConstructor
@@ -28,8 +30,11 @@ public class User {
     @NotNull
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name="role_id")
-    private Role role;
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name="user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
+
+    private boolean enabled=true;
 
 }

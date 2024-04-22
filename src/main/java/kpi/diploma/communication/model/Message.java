@@ -37,5 +37,5 @@ public class Message {
 
     @NotNull
     private Timestamp dateTime;
-    
+
 }

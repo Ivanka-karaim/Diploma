@@ -13,19 +13,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name="reply")
-public class Reply {
+@Table(name="post_user")
+public class PostUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="to_comment_id")
+    @JoinColumn(name="post_id")
     @NotNull
-    private Comment commentToWhichReply;
+    private Post post;
 
     @ManyToOne
-    @JoinColumn(name="comment_id")
+    @JoinColumn(name="user_id")
     @NotNull
-    private Comment comment;
+    private User user;
+
 }

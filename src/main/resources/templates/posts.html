@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+</head>
+<body>
+<div class="container" align="center">
+
+    <div th:each="el: ${posts}">
+        <div class="media">
+            <div class="media-body">
+                <p th:text="'Title: '+${el.title}"></p>
+                <p>Author: <strong th:text="${el.author.name}"></strong></p>
+                <p>Type: <strong th:text="${el.type}"></strong></p>
+                <p>Description: <strong th:text="${el.description}"></strong></p>
+                <p>Timestamp: <strong th:text="${el.dateTime}"></strong></p>
+                <a th:href="'/posts/'+${el.id}" class="btn btn-primary">View in more detail</a>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <h3>Pagination</h3>
+    <div th:each="i : ${#numbers.sequence(1, countPage)}">
+        <a th:href="@{${request.requestURI}(page=${i})}" th:text="${i}"></a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -7,27 +7,33 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Builder
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name="grup")
-public class Group {
-
+@Table(name="response")
+public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name="to_comment_id")
     @NotNull
-    private String title;
+    private Comment commentToWhichReply;
 
     @NotNull
-    private String speciality;
+    private String text;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    @NotNull
+    private User user;
 
     @NotNull
-    private int course;
-
-
+    private Timestamp dateTime;
 }

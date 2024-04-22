@@ -6,24 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
-@Builder
+public enum Role implements GrantedAuthority {
+    STUDENT, TEACHER, CURATOR, RESPONSIBLE, MAIN ;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Entity
-@Table(name="role")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    private Long id;
-
-    @NotNull
-    private String title;
-
-
-
-
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }
