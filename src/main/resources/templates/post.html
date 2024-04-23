@@ -10,7 +10,7 @@
     <div class="media">
         <div class="media-body">
             <p th:text="'Title: '+${post.title}"></p>
-            <p>Author: <strong th:text="${post.author.name}"></strong></p>
+            <p>Author: <strong th:text="${post.author.name + ' ' + post.author.surname}"></strong></p>
             <p>Type: <strong th:text="${post.type}"></strong></p>
             <p>Description: <strong th:text="${post.description}"></strong></p>
             <p>Timestamp: <strong th:text="${post.dateTime}"></strong></p>
@@ -19,6 +19,68 @@
     </div>
     <hr>
 
+    <div th:each="el: ${comments}">
+        <div class="media">
+            <div class="media-body">
+                <p th:text="${el.text}"></p>
+                <p th:text="${el.dateTime}"></p>
+                <p th:text="${el.user.name + ' '+ el.user.surname}"></p>
+                <div id="responses" style="display: none;">
+                    <div th:each="resp: ${el.responses}">
+                        <p th:text="${resp.user.name+ ' '+resp.user.surname}"></p>
+                        <p th:text="${resp.dateTime}"></p>
+                        <p th:text="${resp.text}"></p>
+                        <button th:onclick="'openWindowForResponse('+${el.id}+')'">Відповісти</button>
+                    </div>
+                </div>
+                <div th:if="${el.responses.size() >0}">
+                    <button onclick="toggleVisibility()">Показати відповіді</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="commentForm" th:action="@{/posts/writeComment}" method="post">
+        <textarea name="comment" rows="4" cols="50" placeholder="Напишіть ваш коментар"></textarea><br>
+        <input type="hidden" name="postId" th:value="${post.id}" />
+        <input type="submit" value="Надіслати коментар">
+
+    </form>
+
+    <form id="responseForm" th:action="@{/posts/writeResponse}" method="post" style="display: none">
+        <textarea name="response" rows="4" cols="50" placeholder="Напишіть вашу відповідь"></textarea><br>
+        <input type="hidden" id="commentId" name="commentId"/>
+        <input type="hidden" name="postId" th:value="${post.id}" />
+        <input type="submit" value="Надіслати відповідь">
+        <button type="button" onclick="openWindowForResponse()">✖</button>
+    </form>
+
 </div>
+<script>
+    function toggleVisibility() {
+        var responsesDiv = document.getElementById("responses");
+        if (responsesDiv.style.display === "none") {
+            responsesDiv.style.display = "block";
+        } else {
+            responsesDiv.style.display = "none";
+        }
+    }
+    function openWindowForResponse(commentId=null){
+
+        if(commentId==null){
+            document.getElementById("responseForm").style.display = "none";
+            document.getElementById("commentForm").style.display = "block";
+
+        }else{
+            document.getElementById("commentId").value = commentId;
+            document.getElementById("responseForm").style.display = "block";
+            document.getElementById("commentForm").style.display = "none";
+
+        }
+
+
+
+    }
+</script>
 </body>
 </html>

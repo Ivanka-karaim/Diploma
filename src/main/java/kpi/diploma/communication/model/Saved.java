@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Saved {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
+
     private Long id;
 
     @ManyToOne

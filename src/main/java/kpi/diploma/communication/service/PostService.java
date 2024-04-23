@@ -27,8 +27,14 @@ public class PostService {
     @Autowired
     private PostForUserRepository postForUserRepository;
 
+    @Autowired
+    private UserService userService;
+
+
+
+
     public List<PostDTO> getPostsForUser(User user, int page) {
-        Pageable pageable = PageRequest.of((page - 1) * COUNT_POSTS, COUNT_POSTS, Sort.by("email"));
+        Pageable pageable = PageRequest.of((page - 1) * COUNT_POSTS, COUNT_POSTS, Sort.by(Sort.Direction.DESC, "post.dateTime"));
         Optional<List<PostUser>> postsForUser = postForUserRepository.findPostUsersByUser(user, pageable);
         return parsePostListToDTO(postsForUser.map(postUsers ->
                         postUsers.stream()

@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
 
     @NotNull
