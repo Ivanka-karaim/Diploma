@@ -1,7 +1,9 @@
 package kpi.diploma.communication.dto;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import kpi.diploma.communication.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +22,6 @@ public class UserDTO {
     private String surname;
     private String patronymic;
     private Set<Role> roles;
+
+    private String group;
 }

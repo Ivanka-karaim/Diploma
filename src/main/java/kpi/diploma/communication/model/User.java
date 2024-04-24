@@ -30,6 +30,10 @@ public class User {
     @NotNull
     private String password;
 
+    @ManyToOne
+    @JoinColumn(name="group_id")
+    private Group group;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name="user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)

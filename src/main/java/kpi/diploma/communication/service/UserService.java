@@ -1,7 +1,10 @@
 package kpi.diploma.communication.service;
 
+import kpi.diploma.communication.data.UserGroupRepository;
 import kpi.diploma.communication.data.UserRepository;
 import kpi.diploma.communication.dto.UserDTO;
+import kpi.diploma.communication.model.Group;
+import kpi.diploma.communication.model.Role;
 import kpi.diploma.communication.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,20 +19,42 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserGroupRepository userGroupRepository;
     
     public UserDTO getUserDTO(User user){
         return UserDTO.builder().email(user.getEmail())
                 .name(user.getName())
                 .surname(user.getSurname())
                 .patronymic(user.getPatronymic())
+                .group(user.getGroup()!=null?user.getGroup().getTitle():"")
                 .roles(user.getRoles())
                 .build();
+
+    }
+    public UserDTO getUserDTOById(String email){
+        User user = getUserById(email);
+        return getUserDTO(user);
 
     }
 
     public User getUserById(String email){
         return userRepository.findById(email).orElse(null);
 
+    }
+
+    public UserDTO getCuratorForUser(String groupTitle){
+        return getUserDTO(userRepository.findByGroupTitleAndRolesContaining(groupTitle, Role.CURATOR));
+    }
+
+    public List<UserDTO> getTeachersForUser(String groupTitle){
+        List<User> teachers = userGroupRepository.findUsersByGroupTitle(groupTitle, Role.TEACHER);
+        List<UserDTO> teacherDTOs = new ArrayList<>();
+        for(User teacher: teachers){
+            teacherDTOs.add(getUserDTO(teacher));
+        }
+        return teacherDTOs;
     }
 
     public List<Error> validationData(User user, String passwordRepeat){

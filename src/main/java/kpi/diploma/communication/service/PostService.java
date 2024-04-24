@@ -64,9 +64,7 @@ public class PostService {
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .type(post.getType())
-                .author(new UserDTO(post.getAuthor().getEmail(), post.getAuthor().getName(),
-                        post.getAuthor().getSurname(), post.getAuthor().getPatronymic(),
-                        post.getAuthor().getRoles()))
+                .author(userService.getUserDTO(post.getAuthor()))
                 .dateTime(post.getDateTime())
                 .build();
     }

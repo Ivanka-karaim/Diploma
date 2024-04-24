@@ -36,7 +36,7 @@ public class RegistrationController {
             model.addAttribute("error", "User exist");
             return "registration";
         }
-        user.setRoles(Set.of(Role.STUDENT));
+        user.setRoles(Set.of( Role.STUDENT));
 
         model.addAttribute("errors", userService.validationData(user, passwordRepeat));
 

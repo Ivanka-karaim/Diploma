@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+</head>
+<body>
+<div class="container" align="center">
+    <div class="media">
+        <div class="media-body">
+            <p th:text="${user.name}"></p>
+            <p th:text="${user.surname}"></p>
+            <p th:text="${user.email}"></p>
+            <p th:text="${user.patronymic}"></p>
+            <p th:text="${user.group}"></p>
+            <p th:text="${user.surname}"></p>
+        </div>
+    </div>
+    <h1>Curator</h1>
+    <p th:text="${curator.name}"></p>
+    <p th:text="${curator.surname}"></p>
+    <form th:action="@{/chat}" method="get">
+        <input type="hidden" name="userId" th:value="${user.email}">
+        <button type="button" >Написати</button>
+    </form>
+
+    <h1>Teacher</h1>
+    <div th:each="teacher:${teachers}">
+        <p th:text="${teacher.name}"></p>
+        <p th:text="${teacher.surname}"></p>
+        <form th:action="@{/chat}" method="get">
+            <input type="hidden" name="userId" th:value="${teacher.email}">
+            <button type="button" >Написати</button>
+        </form>
+    </div>
+
+
+
+</div>
+
+</body>
+</html>
