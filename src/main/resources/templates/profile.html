@@ -21,16 +21,16 @@
     <p th:text="${curator.surname}"></p>
     <form th:action="@{/chat}" method="get">
         <input type="hidden" name="userId" th:value="${user.email}">
-        <button type="button" >Написати</button>
+        <button type="submit" >Написати</button>
     </form>
 
     <h1>Teacher</h1>
     <div th:each="teacher:${teachers}">
         <p th:text="${teacher.name}"></p>
         <p th:text="${teacher.surname}"></p>
-        <form th:action="@{/chat}" method="get">
+        <form th:action="@{/openChat}" method="get">
             <input type="hidden" name="userId" th:value="${teacher.email}">
-            <button type="button" >Написати</button>
+            <button type="submit"  >Написати</button>
         </form>
     </div>
 
