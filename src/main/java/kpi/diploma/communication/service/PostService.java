@@ -2,8 +2,10 @@ package kpi.diploma.communication.service;
 
 import kpi.diploma.communication.data.PostForUserRepository;
 import kpi.diploma.communication.data.PostRepository;
+import kpi.diploma.communication.data.UserRepository;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
+import kpi.diploma.communication.model.Group;
 import kpi.diploma.communication.model.PostUser;
 import kpi.diploma.communication.model.Post;
 import kpi.diploma.communication.model.User;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,54 @@ public class PostService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private void addPost(String authorEmail, List<User> users, PostDTO postDTO ){
+        User author = userService.getUserById(authorEmail);
+        Post post = Post.builder()
+                .author(author)
+                .dateTime(java.sql.Timestamp.valueOf(LocalDateTime.now()))
+                .description(postDTO.getDescription())
+                .title(postDTO.getTitle())
+                .type(postDTO.getType())
+                .build();
+        postRepository.save(post);
+        for(User user:users){
+            PostUser postUser = PostUser.builder()
+                    .post(post)
+                    .user(user)
+                    .build();
+            postForUserRepository.save(postUser);
+        }
+
+    }
+
+    public void addPostForUsers(String authorEmail,List<String> listUser,PostDTO postDTO){
+        List<User> users = new ArrayList<>();
+        for(String user: listUser){
+            users.add(userService.getUserById(user));
+
+        }
+        addPost(authorEmail, users, postDTO);
+
+    }
+
+    public void addPostForStudents(String authorEmail,List<String> groups, PostDTO postDTO){
+        List<User> students = new ArrayList<>();
+        for(String group: groups) {
+            students.addAll( userRepository.findByGroupTitle(group));
+
+        }
+        addPost(authorEmail, students, postDTO);
+
+    }
+
+    public List<PostDTO> getPostsForAuthor(String authorEmail){
+        List<Post> posts = postRepository.findPostsByAuthorEmailOrderByDateTimeDesc(authorEmail);
+        return parsePostListToDTO(posts);
+    }
 
 
 

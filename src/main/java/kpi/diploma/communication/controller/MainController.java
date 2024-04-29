@@ -6,6 +6,7 @@ import kpi.diploma.communication.service.ChatService;
 import kpi.diploma.communication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,7 @@ public class MainController {
 
     }
 
+    @PreAuthorize("hasRole(T(kpi.diploma.communication.model.Role).STUDENT)")
     @GetMapping("/profile")
     public String profile(@AuthenticationPrincipal UserDetails userDetails, Model model){
         UserDTO userDTO = userService.getUserDTOById(userDetails.getUsername());

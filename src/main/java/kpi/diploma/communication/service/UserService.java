@@ -2,8 +2,11 @@ package kpi.diploma.communication.service;
 
 import kpi.diploma.communication.data.UserGroupRepository;
 import kpi.diploma.communication.data.UserRepository;
+import kpi.diploma.communication.dto.GroupDTO;
+import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
 import kpi.diploma.communication.model.Group;
+import kpi.diploma.communication.model.Post;
 import kpi.diploma.communication.model.Role;
 import kpi.diploma.communication.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import kpi.diploma.communication.dto.Error;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -22,7 +26,13 @@ public class UserService {
 
     @Autowired
     private UserGroupRepository userGroupRepository;
-    
+
+    private List<UserDTO> parseUserListDTO(List<User> users) {
+        return users.stream()
+                .map(this::getUserDTO)
+                .collect(Collectors.toList());
+    }
+
     public UserDTO getUserDTO(User user){
         return UserDTO.builder().email(user.getEmail())
                 .name(user.getName())
@@ -46,6 +56,10 @@ public class UserService {
 
     public UserDTO getCuratorForUser(String groupTitle){
         return getUserDTO(userRepository.findByGroupTitleAndRolesContaining(groupTitle, Role.CURATOR));
+    }
+
+    public List<UserDTO> getStudentForGroup(String groupTitle){
+        return parseUserListDTO(userRepository.findByGroupTitle(groupTitle));
     }
 
     public List<UserDTO> getTeachersForUser(String groupTitle){

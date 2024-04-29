@@ -2,13 +2,14 @@ package kpi.diploma.communication.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kpi.diploma.communication.dto.CommentDTO;
+import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.PostDTO;
+import kpi.diploma.communication.dto.UserDTO;
+import kpi.diploma.communication.model.Group;
 import kpi.diploma.communication.model.User;
-import kpi.diploma.communication.service.CommentService;
-import kpi.diploma.communication.service.PostService;
-import kpi.diploma.communication.service.ResponseService;
-import kpi.diploma.communication.service.UserService;
+import kpi.diploma.communication.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,10 @@ public class PostController {
 
     @Autowired
     private ResponseService responseService;
+
+    @Autowired
+    private GroupService groupService;
+
     @GetMapping("/")
     public String getPosts(@AuthenticationPrincipal UserDetails userDetails, Model model, @RequestParam(value = "page", required = false) Long page){
         User user = userService.getUserById(userDetails.getUsername());
@@ -50,7 +55,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String getPost(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model){
+    public String getPost(@PathVariable("id") Long id,  Model model){
         PostDTO post = postService.getPostById(id);
         model.addAttribute("post",post);
         List<CommentDTO> commentDTOS = commentService.getCommentsForPost(post.id);
@@ -61,7 +66,7 @@ public class PostController {
     @PostMapping("/writeComment")
     public String writeComment(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("comment") String comment, @RequestParam("postId") Long postId){
         System.out.println(1111111);
-        boolean saveComment = commentService.saveComment(userDetails.getUsername(), comment, postId);
+        commentService.saveComment(userDetails.getUsername(), comment, postId);
         return "redirect:/posts/"+postId;
     }
 
@@ -71,6 +76,48 @@ public class PostController {
         boolean saveComment = responseService.saveResponse(userDetails.getUsername(), response, commentId);
         return "redirect:/posts/"+postId;
     }
+
+    @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
+    @PostMapping("/addPostForStudents")
+    public String addPostForStudents(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("groups") List<String> groups, @RequestParam("post") PostDTO postDTO){
+        postService.addPostForStudents(userDetails.getUsername(), groups, postDTO);
+        return "redirect:/myPosts";
+    }
+
+    @PreAuthorize("hasAnyRole( T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
+    @PostMapping("/addPostForUsers")
+    public String addPostForUsers(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("users") List<String> users, @RequestParam("post") PostDTO postDTO){
+        postService.addPostForUsers(userDetails.getUsername(), users, postDTO);
+        return "redirect:/myPosts";
+    }
+    // TODO перенести в інший контроллер
+    @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
+    @GetMapping("/myPosts")
+    public String getMyPosts(@AuthenticationPrincipal UserDetails userDetails, Model model){
+        List<PostDTO> postDTOS = postService.getPostsForAuthor(userDetails.getUsername());
+        model.addAttribute("posts", postDTOS);
+        return "myPosts";
+
+    }
+    // TODO перенести в інший контроллер
+    @PreAuthorize("hasAnyRole( T(kpi.diploma.communication.model.Role).TEACHER)")
+    @GetMapping("/getGroupsForTeacher")
+    public String getMyGroups(@AuthenticationPrincipal UserDetails userDetails, Model model){
+        List<GroupDTO> groupDTOS = groupService.getGroupsForTeacher(userDetails.getUsername());
+        model.addAttribute("groups", groupDTOS);
+
+        return "groups";
+    }
+    // TODO перенести в інший контроллер
+    @PreAuthorize("hasAnyRole( T(kpi.diploma.communication.model.Role).TEACHER, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
+    @GetMapping("/getStudentsForGroup/{groupTitle}")
+    public String getStudentsForGroup( Model model,@PathVariable("groupTitle") String groupTitle){
+        List<UserDTO> users = userService.getStudentForGroup(groupTitle);
+        model.addAttribute("users", users);
+
+        return "students";
+    }
+
 
 
 
