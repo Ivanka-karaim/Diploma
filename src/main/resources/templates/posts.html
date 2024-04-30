@@ -26,7 +26,7 @@
                     <h2 th:text="${el.author.surname + ' ' + el.author.name}"></h2>
                 </div>
                 <hr class="lineWide" >
-                <div class="date" th:text="${el.dateTime}"></div>
+                <div class="date" th:text="${#dates.format(el.dateTime, 'dd.MM.yyyy HH:mm')}"></div>
 
                 <h2 th:text="${el.title}"></h2>
 
@@ -39,20 +39,45 @@
                         <div class="comment_save_icon"><i class="fa-regular fa-comment"></i></div>
                         <div class="comment_save_text">Коментувати</div>
                     </a>
-                    <a class="flex button_post" >
-                        <div class="comment_save_icon"><i class="fa-regular fa-bookmark"></i></div>
-                        <div class="comment_save_text">Зберегти</div>
-                    </a>
+
+                        <div th:if="${#lists.contains(savedPosts, el)}" style="flex: 1">
+                            <a th:href="@{/posts/saved/{productId}(productId=${el.id})}" class="flex button_post">
+                            <div class="comment_save_icon"> <i class="fa-solid fa-bookmark"></i></div>
+                            <div class="comment_save_text" >Видалити з збережених</div>
+                            </a>
+                        </div>
+                        <div th:if="${!#lists.contains(savedPosts, el)}" style="flex: 1">
+                            <a th:href="@{/posts/saved/{productId}(productId=${el.id})}"  class="flex button_post" >
+                            <div class="comment_save_icon"><i class="fa-regular fa-bookmark"></i></div>
+                            <div class="comment_save_text" >Зберегти</div>
+                            </a>
+                        </div>
+
+
+
+
                 </div>
             </div>
         </div>
-        <hr>
     </div>
-    <h3>Pagination</h3>
-    <div th:each="i : ${#numbers.sequence(1, countPage)}">
-        <a th:href="@{${request.requestURI}(page=${i})}" th:text="${i}"></a>
+    <div th:each="i : ${#numbers.sequence(1, countPage)}" class="pagination">
+        <a th:href="@{${request.requestURI}(page=${i})}" th:text="${i}" class="pagination_button"></a>
     </div>
 </div>
 <script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
+<script>
+
+    let timestamp document.getElementById("timestamp")
+
+    // Перетворення рядка на об'єкт дати
+    let date = new Date(timestamp);
+
+    // Форматування дати
+    let formattedTime = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+
+    // Виведення результату у відповідний <td>
+    document.getElementById("timestamp").textContent = formattedTime;
+</script>
+
 </body>
 </html>

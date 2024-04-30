@@ -49,6 +49,12 @@ public class PostController {
             System.out.println(posts);
             model.addAttribute("countPage", (int) Math.ceil((float) posts.size()/ postService.COUNT_POSTS));
             System.out.println( (int) Math.ceil((float) posts.size()/ postService.COUNT_POSTS));
+
+
+            List<PostDTO> savedPosts = postService.getListSaved(userDetails.getUsername());
+
+            System.out.println(savedPosts);
+            model.addAttribute("savedPosts", savedPosts);
             model.addAttribute("request", request);
         }
         return "posts";
@@ -61,6 +67,13 @@ public class PostController {
         List<CommentDTO> commentDTOS = commentService.getCommentsForPost(post.id);
         model.addAttribute("comments", commentDTOS);
         return "post";
+    }
+
+    @GetMapping("/saved/{id}")
+    public String savedPost(@PathVariable("id") Long id,  @AuthenticationPrincipal UserDetails userDetails){
+        System.out.println("saved");
+        postService.savedPost(userDetails.getUsername(),id);
+        return "redirect:/posts/";
     }
 
     @PostMapping("/writeComment")

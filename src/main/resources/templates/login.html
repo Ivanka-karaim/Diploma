@@ -1,7 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="ua">
+<html lang="en">
 <head>
-    <title>Spring Security Example </title>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+    <link rel="stylesheet" th:href="@{../css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/posts.css}">
 </head>
 <body>
 <div th:if="${param.error}">
@@ -10,14 +16,27 @@
 <div th:if="${param.logout}">
     You have been logged out.
 </div>
-<div th:if="${error}" >
+<div th:if="${error}">
     <p th:text="${error}"></p>
 </div>
-<form th:action="@{/login}" method="post">
-    <div><label> Email : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
-<a th:href="@{/registration}">Add user</a>
+<header class="header">
+    <div class="my_container header_in">
+        <img class="logo" th:href="@{/}" src="/img/logo.png" alt="Logo">
+        <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+    </div>
+</header>
+<div class="my_container">
+
+
+        <form th:action="@{/login}" method="post" style="width: 100%" class="login_container">
+            <h1>Увійдіть будь ласка</h1>
+            <input class="input_login block_login" type="text" name="username" placeholder="aaaaa@gmail.com"/>
+            <input class="input_login block_login" type="password" name="password" placeholder="***********"/>
+            <input class="button_login block_login" type="submit" value="Sign In"/>
+        </form>
+        <a th:href="@{/registration}">Add user</a>
+    </div>
+
+<script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
 </body>
 </html>

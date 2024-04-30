@@ -21,6 +21,7 @@
     margin-left: auto;
 }
 
+
 .flex{
     display: flex;
 }
@@ -47,13 +48,14 @@
     padding-top: 10px;
     font-family: Kharkiv, serif;
     font-style: normal;
-    font-size: 18px;
-    line-height: 23px;
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 10px;
     color: #555555;
 }
 
 .text_post{
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 20px;
 
 }
@@ -67,7 +69,7 @@
     margin-left: 10px;
     font-family: Kharkiv, serif;
     font-style: normal;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 30px;
     color: #555555;
 }
@@ -86,4 +88,25 @@
     background-color: #E5E5E5;
     text-decoration: none;
 
+}
+
+.pagination{
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.pagination_button{
+    margin-left: 10px;
+    font-family: Kharkiv, serif;
+    font-style: normal;
+    font-size: 25px;
+    line-height: 30px;
+    color: black;
+}
+.pagination_button:hover{
+    cursor: pointer;
+    color: #FCD95B;
+    text-decoration: none;
 }

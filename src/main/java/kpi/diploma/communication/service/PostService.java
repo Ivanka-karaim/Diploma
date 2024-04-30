@@ -2,13 +2,11 @@ package kpi.diploma.communication.service;
 
 import kpi.diploma.communication.data.PostForUserRepository;
 import kpi.diploma.communication.data.PostRepository;
+import kpi.diploma.communication.data.SavedRepository;
 import kpi.diploma.communication.data.UserRepository;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
-import kpi.diploma.communication.model.Group;
-import kpi.diploma.communication.model.PostUser;
-import kpi.diploma.communication.model.Post;
-import kpi.diploma.communication.model.User;
+import kpi.diploma.communication.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +33,34 @@ public class PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SavedRepository savedRepository;
+
+    public List<PostDTO> getListSaved(String userEmail){
+        List<Post> posts = savedRepository.findPostByUserEmail(userEmail);
+        return parsePostListToDTO(posts);
+
+    }
+
+
+    public void savedPost(String userEmail, Long postId){
+        Saved savedPost = savedRepository.findByUserEmailAndPostId(userEmail, postId).orElse(null);
+        if(savedPost != null) {
+            savedRepository.delete(savedPost);
+        }else{
+            User user = userService.getUserById(userEmail);
+            Post post = postRepository.findById(postId).orElse(null);
+            if (post != null && user != null) {
+                Saved saved = Saved.builder()
+                        .user(user)
+                        .post(post).build();
+                savedRepository.save(saved);
+            } else {
+                throw new RuntimeException("Not found post or user");
+            }
+        }
+    }
 
     private void addPost(String authorEmail, List<User> users, PostDTO postDTO ){
         User author = userService.getUserById(authorEmail);
@@ -80,6 +106,8 @@ public class PostService {
         List<Post> posts = postRepository.findPostsByAuthorEmailOrderByDateTimeDesc(authorEmail);
         return parsePostListToDTO(posts);
     }
+
+
 
 
 

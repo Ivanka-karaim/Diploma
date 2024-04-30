@@ -22,5 +22,38 @@ body{
 }
 
 
+.login_container{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+}
+
+.input_login{
+    width: 50%;
+    height: 50px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border-color: white;
+    box-shadow: none;
+    outline: none;
+}
+
+.button_login{
+    width: 30%;
+    background: #FCD95B;
+    border-radius: 12px;
+    height:50px;
+    box-shadow: none;
+    outline: none;
+}
+.block_login{
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+
 
 
