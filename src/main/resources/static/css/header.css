@@ -1,0 +1,42 @@
+.header {
+    height: 140px;
+    width: 100%;
+    background-color: #FCD95B;
+    left: 0;
+    top: 0;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.icon i {
+    font-size: 50px;
+
+}
+
+.header .header_in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 95px;
+    position: relative;
+}
+
+.my_container {
+    width: 100%;
+    padding-right: 200px;
+    padding-left: 200px;
+    margin-right: auto;
+    margin-left: auto;
+
+}
+.icon i{
+    color: black;
+}
+.icon:hover {
+    cursor: pointer;
+    text-decoration: none;
+
+}
+.logo:hover{
+    cursor: pointer;
+}

@@ -1,0 +1,20 @@
+@font-face {
+    font-family: Kharkiv;
+    src: url(../fonts/Kharkiv.ttf);
+    font-weight: normal;
+}
+@font-face {
+    font-family: Inter;
+    src: url(../fonts/Inter.ttf);
+    font-weight: 400;
+}
+@font-face {
+    font-family: InikaBold;
+    src: url(../fonts/Inika-Bold.ttf);
+    font-weight: normal;
+}
+@font-face {
+    font-family: InikaRegular;
+    src: url(../fonts/Inika-Regular.ttf);
+    font-weight: normal;
+}

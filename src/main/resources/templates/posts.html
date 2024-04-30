@@ -3,19 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Posts</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/posts.css}">
 </head>
 <body>
-<div class="container" align="center">
+<header class="header">
+    <div class="my_container header_in">
+        <img class="logo" th:href="@{/}" src="/img/logo.png" alt="Logo">
+        <a class="icon"  th:href="@{/profile}" target="_blank"><i class="fa-regular fa-user"></i></a>
+    </div>
+</header>
+<div class="my_container" >
 
     <div th:each="el: ${posts}">
-        <div class="media">
-            <div class="media-body">
-                <p th:text="'Title: '+${el.title}"></p>
-                <p>Author: <strong th:text="${el.author.name}"></strong></p>
-                <p>Type: <strong th:text="${el.type}"></strong></p>
-                <p>Description: <strong th:text="${el.description}"></strong></p>
-                <p>Timestamp: <strong th:text="${el.dateTime}"></strong></p>
-                <a th:href="'/posts/'+${el.id}" class="btn btn-primary">View in more detail</a>
+        <div class="post_container">
+            <div class="post_block">
+                <div class="flex">
+                    <div class="icon_post"><i class="fa-regular fa-user"></i></div>
+                    <h2 th:text="${el.author.surname + ' ' + el.author.name}"></h2>
+                </div>
+                <hr class="lineWide" >
+                <div class="date" th:text="${el.dateTime}"></div>
+
+                <h2 th:text="${el.title}"></h2>
+
+                <p class="text_post" th:text="${el.description}"></p>
+
+                <hr class="lineNarrow" >
+
+                <div class="flex" style="width: 100%;">
+                    <a th:href="@{/posts/el.id}" class="flex button_post" >
+                        <div class="comment_save_icon"><i class="fa-regular fa-comment"></i></div>
+                        <div class="comment_save_text">Коментувати</div>
+                    </a>
+                    <a class="flex button_post" >
+                        <div class="comment_save_icon"><i class="fa-regular fa-bookmark"></i></div>
+                        <div class="comment_save_text">Зберегти</div>
+                    </a>
+                </div>
             </div>
         </div>
         <hr>
@@ -25,6 +53,6 @@
         <a th:href="@{${request.requestURI}(page=${i})}" th:text="${i}"></a>
     </div>
 </div>
-
+<script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
 </body>
 </html>

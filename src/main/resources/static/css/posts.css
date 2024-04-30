@@ -1,0 +1,89 @@
+.post_block{
+    padding: 45px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 12px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+
+
+}
+.post_block * {
+    margin-left: 0;
+}
+.post_container{
+    width: 100%;
+    padding-top: 100px;
+    padding-left: 200px;
+    padding-right: 200px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.flex{
+    display: flex;
+}
+.icon_post{
+    margin-right: 10px;
+}
+.icon_post i{
+    font-size: 30px;
+}
+.lineWide{
+    border: 2px solid #FCD95B;
+    width: 300px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.lineNarrow{
+    border: 1px solid #FCD95B;
+    margin-bottom: 0;
+    margin-top: 0;
+    width: 100%;
+}
+
+.date{
+    padding-top: 10px;
+    font-family: Kharkiv, serif;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 23px;
+    color: #555555;
+}
+
+.text_post{
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+
+.comment_save_icon i{
+    font-size: 24px;
+    color: #555555;
+}
+
+.comment_save_text{
+    margin-left: 10px;
+    font-family: Kharkiv, serif;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 30px;
+    color: #555555;
+}
+
+.button_post{
+    margin-top: 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    justify-content: center;
+    flex: 1;
+    text-decoration: none;
+
+}
+.button_post:hover{
+    cursor: pointer;
+    background-color: #E5E5E5;
+    text-decoration: none;
+
+}
