@@ -35,7 +35,7 @@
                 <hr class="lineNarrow" >
 
                 <div class="flex" style="width: 100%;">
-                    <a th:href="@{/posts/el.id}" class="flex button_post" >
+                    <a th:href="@{/posts/{productId}(productId=${el.id})}" class="flex button_post" >
                         <div class="comment_save_icon"><i class="fa-regular fa-comment"></i></div>
                         <div class="comment_save_text">Коментувати</div>
                     </a>

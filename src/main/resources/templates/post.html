@@ -3,84 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <title>Post</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/posts.css}">
 </head>
 <body>
-<div class="container" align="center">
+<header class="header">
+    <div class="my_container header_in">
+        <img class="logo" th:href="@{/}" src="/img/logo.png" alt="Logo">
+        <a class="icon" th:href="@{/profile}" target="_blank"><i class="fa-regular fa-user"></i></a>
+    </div>
+</header>
+<div class="my_container">
+    <a th:href="@{/posts/}" class="flex button_post" style="margin-left: 0">
+        <div class="comment_save_icon"><i class="fa-solid fa-arrow-left"></i></div>
+        <div class="comment_save_text">Повернутись на головну</div>
+    </a>
+    <div class="post_container">
+        <div class="post_block">
+            <div class="flex" style="width: 100%">
+                <div style="flex: 1">
+                    <div class="flex">
+                        <div class="icon_post"><i class="fa-regular fa-user"></i></div>
+                        <h2 th:text="${post.author.surname + ' ' + post.author.name}"></h2>
+                    </div>
+                    <hr class="lineWide">
+                    <div class="date" th:text="${#dates.format(post.dateTime, 'dd.MM.yyyy HH:mm')}"></div>
 
-    <div class="media">
-        <div class="media-body">
-            <p th:text="'Title: '+${post.title}"></p>
-            <p>Author: <strong th:text="${post.author.name + ' ' + post.author.surname}"></strong></p>
-            <p>Type: <strong th:text="${post.type}"></strong></p>
-            <p>Description: <strong th:text="${post.description}"></strong></p>
-            <p>Timestamp: <strong th:text="${post.dateTime}"></strong></p>
+                </div>
+                <div th:if="${#lists.contains(savedPosts, post)}" style="flex: 1">
+                    <a th:href="@{/posts/saved/{productId}(productId=${post.id})}" class="flex button_post">
+                        <div class="comment_save_icon"><i class="fa-solid fa-bookmark"></i></div>
+                        <div class="comment_save_text">Видалити з збережених</div>
+                    </a>
+                </div>
+                <div th:if="${!#lists.contains(savedPosts, post)}" style="flex: 1">
+                    <a th:href="@{/posts/saved/{productId}(productId=${post.id})}" class="flex button_post">
+                        <div class="comment_save_icon"><i class="fa-regular fa-bookmark"></i></div>
+                        <div class="comment_save_text">Зберегти</div>
+                    </a>
+                </div>
+            </div>
+
+            <h2 th:text="${post.title}"></h2>
+
+            <p class="text_post" th:text="${post.description}"></p>
 
         </div>
-    </div>
-    <hr>
-
-    <div th:each="el: ${comments}">
-        <div class="media">
-            <div class="media-body">
-                <p th:text="${el.text}"></p>
-                <p th:text="${el.dateTime}"></p>
-                <p th:text="${el.user.name + ' '+ el.user.surname}"></p>
-                <div id="responses" style="display: none;">
-                    <div th:each="resp: ${el.responses}">
-                        <p th:text="${resp.user.name+ ' '+resp.user.surname}"></p>
-                        <p th:text="${resp.dateTime}"></p>
-                        <p th:text="${resp.text}"></p>
-                        <button th:onclick="'openWindowForResponse('+${el.id}+')'">Відповісти</button>
+        <h2 style="margin-top: 20px;">Коментарі</h2>
+        <hr class="lineWide" style="margin-left: 0">
+        <div th:each="el: ${comments}">
+            <div class="comment_block">
+                <div class="flex_space_between">
+                    <div class="flex">
+                        <div class="icon_comment"><i class="fa-regular fa-user"></i></div>
+                        <p th:text="${el.user.surname + ' ' + el.user.name}" style="margin-bottom: 5px"></p>
                     </div>
+                    <div class="date" th:text="${#dates.format(el.dateTime, 'dd.MM.yyyy HH:mm')}"></div>
+
+
+                </div>
+                <div class="flex_space_between">
+                    <p style="font-size: 18px; margin-bottom: 0" th:text="${el.text}"></p>
+                    <button class="button_reply" th:onclick="'openWindowForResponse('+${el.id}+')'">Відповісти</button>
                 </div>
                 <div th:if="${el.responses.size() >0}">
-                    <button onclick="toggleVisibility()">Показати відповіді</button>
+
+                    <button onclick="toggleVisibility(this)" class="flex buttonWatchReply" style="align-items: center" th:data-id="${el.id}">
+                        <hr class="lineReply">
+                        <p th:id="${'watchReply-'+el.id}" class="textWatchReply">Показати відповіді</p>
+                    </button>
+                    <div th:id="${'responses-'+el.id}" style="display: none;">
+
+                        <div th:each="resp: ${el.responses}">
+                            <div class="response">
+                                <div class="flex_space_between">
+                                    <div class="flex">
+                                        <div class="icon_comment"><i class="fa-regular fa-user"></i></div>
+                                        <p th:text="${resp.user.surname + ' ' + resp.user.name}"
+                                           style="margin-bottom: 5px"></p>
+                                    </div>
+                                    <div class="date"
+                                         th:text="${#dates.format(resp.dateTime, 'dd.MM.yyyy HH:mm')}"></div>
+
+
+                                </div>
+                                <p style="font-size: 18px; margin-bottom: 0" th:text="${resp.text}"></p>
+                            </div>
+
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <form id="commentForm" th:action="@{/posts/writeComment}" method="post" class="form">
+            <input name="comment" class="input_comment" placeholder="Напишіть ваш коментар">
+            <input type="hidden" name="postId" th:value="${post.id}"/>
+            <input type="submit" class="button_send_comment" value="Надіслати">
+
+        </form>
+
+        <form  id="responseForm" th:action="@{/posts/writeResponse}" method="post"  class="form_response" style="display: none">
+                <input name="response" class="input_comment" placeholder="Напишіть вашу відповідь">
+                <input type="hidden"  id="commentId" name="commentId"/>
+                <input type="hidden" name="postId" th:value="${post.id}"/>
+                <input type="submit"  class="button_send_comment" value="Надіслати">
+            <button id="close" class="button_close" type="button"  onclick="openWindowForResponse()">✖</button>
+        </form>
+
+
+
+
+
     </div>
 
-    <form id="commentForm" th:action="@{/posts/writeComment}" method="post">
-        <textarea name="comment" rows="4" cols="50" placeholder="Напишіть ваш коментар"></textarea><br>
-        <input type="hidden" name="postId" th:value="${post.id}" />
-        <input type="submit" value="Надіслати коментар">
-
-    </form>
-
-    <form id="responseForm" th:action="@{/posts/writeResponse}" method="post" style="display: none">
-        <textarea name="response" rows="4" cols="50" placeholder="Напишіть вашу відповідь"></textarea><br>
-        <input type="hidden" id="commentId" name="commentId"/>
-        <input type="hidden" name="postId" th:value="${post.id}" />
-        <input type="submit" value="Надіслати відповідь">
-        <button type="button" onclick="openWindowForResponse()">✖</button>
-    </form>
 
 </div>
-<script>
-    function toggleVisibility() {
-        var responsesDiv = document.getElementById("responses");
+
+
+<!--<div class="media">-->
+<!--    <div class="media-body">-->
+<!--        <p th:text="'Title: '+${post.title}"></p>-->
+<!--        <p>Author: <strong th:text="${post.author.name + ' ' + post.author.surname}"></strong></p>-->
+<!--        <p>Type: <strong th:text="${post.type}"></strong></p>-->
+<!--        <p>Description: <strong th:text="${post.description}"></strong></p>-->
+<!--        <p>Timestamp: <strong th:text="${post.dateTime}"></strong></p>-->
+
+<!--    </div>-->
+<!--</div>-->
+<!--<hr>-->
+
+<!--<div th:each="el: ${comments}">-->
+<!--    <div class="media">-->
+<!--        <div class="media-body">-->
+<!--            <p th:text="${el.text}"></p>-->
+<!--            <p th:text="${el.dateTime}"></p>-->
+<!--            <p th:text="${el.user.name + ' '+ el.user.surname}"></p>-->
+<!--            <div id="responses" style="display: none;">-->
+<!--                <div th:each="resp: ${el.responses}">-->
+<!--                    <p th:text="${resp.user.name+ ' '+resp.user.surname}"></p>-->
+<!--                    <p th:text="${resp.dateTime}"></p>-->
+<!--                    <p th:text="${resp.text}"></p>-->
+<!--                    <button th:onclick="'openWindowForResponse('+${el.id}+')'">Відповісти</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div th:if="${el.responses.size() >0}">-->
+<!--                <button onclick="toggleVisibility()">Показати відповіді</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+</div>
+<script >
+    function toggleVisibility(idData) {
+        var id = idData.getAttribute('data-id');
+        var responsesDiv = document.getElementById('responses-'+id);
+        var watchReply = document.getElementById("watchReply-"+id);
         if (responsesDiv.style.display === "none") {
+            watchReply.innerText = "Приховати відповіді";
             responsesDiv.style.display = "block";
+
         } else {
+            watchReply.innerText = "Показати відповіді";
             responsesDiv.style.display = "none";
         }
     }
-    function openWindowForResponse(commentId=null){
 
-        if(commentId==null){
+    function openWindowForResponse(commentId = null) {
+
+        if (commentId == null) {
             document.getElementById("responseForm").style.display = "none";
-            document.getElementById("commentForm").style.display = "block";
+            document.getElementById("commentForm").style.display = "flex";
 
-        }else{
+        } else {
             document.getElementById("commentId").value = commentId;
-            document.getElementById("responseForm").style.display = "block";
+            document.getElementById("responseForm").style.display = "flex";
             document.getElementById("commentForm").style.display = "none";
 
         }
 
 
-
     }
 </script>
+<script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
 </body>
 </html>

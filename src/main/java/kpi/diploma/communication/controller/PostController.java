@@ -61,11 +61,14 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String getPost(@PathVariable("id") Long id,  Model model){
+    public String getPost(@AuthenticationPrincipal UserDetails userDetails,@PathVariable("id") Long id,  Model model){
         PostDTO post = postService.getPostById(id);
         model.addAttribute("post",post);
         List<CommentDTO> commentDTOS = commentService.getCommentsForPost(post.id);
         model.addAttribute("comments", commentDTOS);
+
+        List<PostDTO> savedPosts = postService.getListSaved(userDetails.getUsername());
+        model.addAttribute("savedPosts", savedPosts);
         return "post";
     }
 
