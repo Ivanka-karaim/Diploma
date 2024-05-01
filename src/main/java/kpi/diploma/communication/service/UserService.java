@@ -39,6 +39,8 @@ public class UserService {
                 .surname(user.getSurname())
                 .patronymic(user.getPatronymic())
                 .group(user.getGroup()!=null?user.getGroup().getTitle():"")
+                .speciality(user.getGroup()!=null?user.getGroup().getSpeciality():"")
+                .course(user.getGroup()!=null?user.getGroup().getCourse():0)
                 .roles(user.getRoles())
                 .build();
 

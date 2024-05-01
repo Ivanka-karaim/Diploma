@@ -1,22 +1,11 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    flex-direction: column;
-}
+
 
 .chat-container {
     display: flex;
-    max-width: 800px;
-    min-width: 800px;
+    max-width: 1000px;
+    min-width: 400px;
     min-height: 600px;
     max-height: 600px;
-    margin: 20px;
     border: 1px solid #ccc;
     background-color: #fff;
     overflow: hidden;
@@ -24,66 +13,9 @@ body {
     border-radius: 8px;
 }
 
-.users-list {
-    flex: 1;
-    border-right: 1px solid #ccc;
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: #3498db;
-    color: #fff;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
 
-.users-list-container {
-    height: 100%;
-    overflow-y: scroll;
-}
 
-.users-list h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-}
 
-.users-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.user-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    cursor: pointer;
-}
-
-.user-item.active {
-    background-color: #cdebff;
-    color: #4f4f4f;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.user-item img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.user-item span {
-    font-weight: bold;
-}
-
-.separator {
-    height: 1px;
-    background-color: #ccc;
-    margin: 10px 0;
-}
 
 .chat-area {
     flex: 3;
@@ -96,7 +28,7 @@ body {
 }
 
 .message {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     border-radius: 5px;
 }
 
@@ -110,6 +42,10 @@ body {
     padding: 0 12px;
     border-radius: 15px;
     word-wrap: break-word;
+    font-family: InikaRegular, serif;
+    font-size: 20px;
+    line-height: 30px;
+    margin: 5px;
 }
 
 .user-item span.nbr-msg {
@@ -123,15 +59,17 @@ body {
 }
 
 .sender {
-    background-color: #3498db;
-    color: #fff;
+    background-color: #FCD95B;
+    color: #000000;
     align-self: flex-end;
+    margin-left: 30px;
 }
 
 .receiver {
-    background-color: #ecf0f1;
-    color: #333;
+    background-color: #E5E5E5;
+    color: #000000;
     align-self: flex-start;
+    margin-right: 30px;
 }
 
 .message-input {
@@ -150,8 +88,8 @@ body {
 .message-input button {
     padding: 10px;
     border: none;
-    background-color: #3498db;
-    color: #fff;
+    background-color: #FCD95B;
+    color: #000000;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -187,8 +125,8 @@ body {
 .user-form button {
     padding: 12px;
     border: none;
-    background-color: #3498db;
-    color: #fff;
+    background-color: #000000;
+    color: #FCD95B;
     border-radius: 5px;
     cursor: pointer;
     width: 100%;

@@ -40,7 +40,7 @@ public class PostController {
     @Autowired
     private GroupService groupService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public String getPosts(@AuthenticationPrincipal UserDetails userDetails, Model model, @RequestParam(value = "page", required = false) Long page){
         User user = userService.getUserById(userDetails.getUsername());
         if(user!=null){
@@ -73,10 +73,15 @@ public class PostController {
     }
 
     @GetMapping("/saved/{id}")
-    public String savedPost(@PathVariable("id") Long id,  @AuthenticationPrincipal UserDetails userDetails){
+    public String savedPost(@PathVariable("id") Long id,  @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request){
         System.out.println("saved");
         postService.savedPost(userDetails.getUsername(),id);
-        return "redirect:/posts/";
+
+
+        String referer = request.getHeader("referer");
+
+        return "redirect:" + referer;
+
     }
 
     @PostMapping("/writeComment")
@@ -106,33 +111,7 @@ public class PostController {
         postService.addPostForUsers(userDetails.getUsername(), users, postDTO);
         return "redirect:/myPosts";
     }
-    // TODO перенести в інший контроллер
-    @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
-    @GetMapping("/myPosts")
-    public String getMyPosts(@AuthenticationPrincipal UserDetails userDetails, Model model){
-        List<PostDTO> postDTOS = postService.getPostsForAuthor(userDetails.getUsername());
-        model.addAttribute("posts", postDTOS);
-        return "myPosts";
 
-    }
-    // TODO перенести в інший контроллер
-    @PreAuthorize("hasAnyRole( T(kpi.diploma.communication.model.Role).TEACHER)")
-    @GetMapping("/getGroupsForTeacher")
-    public String getMyGroups(@AuthenticationPrincipal UserDetails userDetails, Model model){
-        List<GroupDTO> groupDTOS = groupService.getGroupsForTeacher(userDetails.getUsername());
-        model.addAttribute("groups", groupDTOS);
-
-        return "groups";
-    }
-    // TODO перенести в інший контроллер
-    @PreAuthorize("hasAnyRole( T(kpi.diploma.communication.model.Role).TEACHER, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
-    @GetMapping("/getStudentsForGroup/{groupTitle}")
-    public String getStudentsForGroup( Model model,@PathVariable("groupTitle") String groupTitle){
-        List<UserDTO> users = userService.getStudentForGroup(groupTitle);
-        model.addAttribute("users", users);
-
-        return "students";
-    }
 
 
 

@@ -10,6 +10,7 @@ h2 {
     font-size: 24px;
     line-height: 34px;
 }
+
 h3 {
 
     font-size: 20px;
@@ -22,12 +23,12 @@ p {
     line-height: 30px;
 }
 
-body{
+body {
     background-color: #E5E5E5;
 }
 
 
-.login_container{
+.login_container {
     margin-top: 50px;
     display: flex;
     flex-direction: column;
@@ -36,7 +37,7 @@ body{
 
 }
 
-.input_login{
+.input_login {
     width: 50%;
     height: 50px;
     background: #FFFFFF;
@@ -46,21 +47,97 @@ body{
     outline: none;
 }
 
-.button_login{
+.button_login {
     width: 30%;
     background: #FCD95B;
     border-radius: 12px;
-    height:50px;
+    height: 50px;
     box-shadow: none;
     outline: none;
 }
-.block_login{
+
+.block_login {
     margin-top: 20px;
     margin-bottom: 20px;
 
 }
 
+.icon_profile {
+    margin-right: 20px;
+}
 
+
+.icon_profile i {
+    font-size: 100px;
+}
+
+.email_text {
+
+
+    font-family: 'Inika', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 40px;
+
+    color: #D7AA04;
+}
+
+.title_profile {
+    color: #555555;
+    margin-right: 20px;
+}
+
+.block_profile {
+    margin-top: 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    justify-content: space-between;
+    flex: 1;
+    display: flex;
+}
+
+.vert_line {
+    width: 0;
+    height: 100%;
+    border: 1px solid #555555;
+}
+
+.button_send_message {
+    height: 50px;
+    border-radius: 12px;
+    background-color: #FCD95B;
+    color: black;
+    border: none;
+    box-shadow: none;
+    padding: 0 50px;
+    cursor: pointer;
+
+
+}
+
+.button_watch_list_students{
+    color: black;
+    font-size: 22px;
+    line-height: 30px;
+    background: transparent;
+    border: none;
+}
+.button_watch_list_students:hover{
+    cursor: pointer;
+    background: #686868;
+}
+.button_logout{
+
+    padding: 20px 50px;
+    border-radius: 12px;
+    background-color: #FCD95B;
+    color: black;
+    border:none;
+    font-size: 25px;
+    box-shadow: none;
+    cursor: pointer;
+}
 
 
 

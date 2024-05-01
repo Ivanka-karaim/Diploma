@@ -5,6 +5,7 @@ import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.model.Group;
 import kpi.diploma.communication.model.Group;
+import kpi.diploma.communication.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,17 @@ import java.util.stream.Collectors;
 public class GroupService {
     @Autowired
     private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private UserService userService;
     public List<GroupDTO> getGroupsForTeacher(String teacherEmail){
         List<Group> groups = userGroupRepository.findGroupsByUserEmail(teacherEmail);
         return parseGroupListToDTO(groups);
+    }
+
+    public GroupDTO getMyGroup(String teacherEmail){
+        User user = userService.getUserById(teacherEmail);
+        return user.getGroup()!=null?parsingGroupDTO(user.getGroup()):null;
     }
 
     private List<GroupDTO> parseGroupListToDTO(List<Group> Groups) {

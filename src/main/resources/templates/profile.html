@@ -2,41 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Posts</title>
+    <title>Profile</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/posts.css}">
 </head>
 <body>
-<div class="container" align="center">
-    <div class="media">
-        <div class="media-body">
-            <p th:text="${user.name}"></p>
-            <p th:text="${user.surname}"></p>
-            <p th:text="${user.email}"></p>
-            <p th:text="${user.patronymic}"></p>
-            <p th:text="${user.group}"></p>
-            <p th:text="${user.surname}"></p>
+<header class="header">
+    <div class="my_container header_in">
+        <a th:href="@{/}">
+            <img class="logo" src="/img/logo.png" alt="Logo">
+        </a>
+        <a class="icon"  th:href="@{/profile}" ><i class="fa-regular fa-user"></i></a>
+    </div>
+</header>
+<div class="my_container">
+    <div class="post_container">
+        <div class="post_block">
+            <div class="flex">
+                <div class="icon_profile"><i class="fa-regular fa-user"></i></div>
+                <div>
+                    <h2 style="font-size: 36px; line-height: 50px"
+                        th:text="${user.surname + ' ' + user.name + ' '+ user.patronymic}"></h2>
+                    <div class="email_text" th:text="${user.email}"></div>
+                </div>
+
+            </div>
+            <div class="block_profile">
+                <div th:if="${isStudent}">
+                    <div>
+                        <div class="flex">
+                            <h2 class="title_profile">Навчальна група</h2>
+                            <h2 th:text="${user.group}"></h2>
+                        </div>
+                        <div class="flex">
+                            <h2 class="title_profile">Спеціальність</h2>
+                            <h2 th:text="${user.speciality}"></h2>
+                        </div>
+                        <div class="flex">
+                            <h2 class="title_profile">Курс</h2>
+                            <h2 th:text="${user.course}"></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="vert_line"></div>
+                    <div style="margin-left: 20px">
+                        <a th:href="@{/profile/saved}" class="flex button_post">
+                            <div class="comment_save_icon"><i class="fa-regular fa-bookmark"></i></div>
+                            <div class="comment_save_text">Збережені</div>
+                        </a>
+                        <div th:if="${isStudent}">
+                            <a th:href="@{/profile/teachers}" class="flex button_post">
+                                <div class="comment_save_icon"><i class="fa-regular fa-user"></i></div>
+                                <div class="comment_save_text">Викладачі</div>
+                            </a>
+                        </div>
+                        <div th:if="${!isStudent}">
+                            <a th:href="@{/profile/groups}" class="flex button_post">
+                                <div class="comment_save_icon"><i class="fa-regular fa-user"></i></div>
+                                <div class="comment_save_text">Учні</div>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 50px">
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" class="button_logout" value="Вийти"/>
+            </form>
         </div>
     </div>
-    <h1>Curator</h1>
-    <p th:text="${curator.name}"></p>
-    <p th:text="${curator.surname}"></p>
-    <form th:action="@{/chat}" method="get">
-        <input type="hidden" name="userId" th:value="${user.email}">
-        <button type="submit" >Написати</button>
-    </form>
-
-    <h1>Teacher</h1>
-    <div th:each="teacher:${teachers}">
-        <p th:text="${teacher.name}"></p>
-        <p th:text="${teacher.surname}"></p>
-        <form th:action="@{/openChat}" method="get">
-            <input type="hidden" name="userId" th:value="${teacher.email}">
-            <button type="submit"  >Написати</button>
-        </form>
-    </div>
-
-
-
 </div>
+
+<!--    <h1>Curator</h1>-->
+<!--    <p th:text="${curator.name}"></p>-->
+<!--    <p th:text="${curator.surname}"></p>-->
+<!--    <form th:action="@{/chat}" method="get">-->
+<!--        <input type="hidden" name="userId" th:value="${user.email}">-->
+<!--        <button type="submit" >Написати</button>-->
+<!--    </form>-->
+
+<!--    <h1>Teacher</h1>-->
+<!--    <div th:each="teacher:${teachers}">-->
+<!--        <p th:text="${teacher.name}"></p>-->
+<!--        <p th:text="${teacher.surname}"></p>-->
+<!--        <form th:action="@{/openChat}" method="get">-->
+<!--            <input type="hidden" name="userId" th:value="${teacher.email}">-->
+<!--            <button type="submit"  >Написати</button>-->
+<!--        </form>-->
+<!--    </div>-->
+
+
+<script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
 
 </body>
 </html>

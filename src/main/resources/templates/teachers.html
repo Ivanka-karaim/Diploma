@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/posts.css}">
+</head>
+<body>
+<header class="header">
+    <div class="my_container header_in">
+        <a th:href="@{/}">
+            <img class="logo" src="/img/logo.png" alt="Logo">
+        </a>
+        <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+    </div>
+</header>
+
+<div class="my_container">
+    <div class="post_container">
+        <div class="post_block">
+            <h2>Куратор</h2>
+            <hr class="lineWide">
+            <div class="block_profile">
+                <h2 th:text="${curator.surname + ' ' + curator.name +' '+ curator.patronymic}"></h2>
+                <form th:action="@{/openChat}" method="get">
+                    <input type="hidden" name="userId" th:value="${curator.email}">
+                    <button type="submit" class="button_send_message">Написати</button>
+
+                </form>
+                <!--                <a class="button_send_message" th:href="@{/openChat?userId=curator.email}">Надіслати</a>-->
+            </div>
+        </div>
+        <div style="height:50px"></div>
+        <div th:if="${teachers.size()>0}">
+            <div class="post_block">
+                <h2>Вчителі</h2>
+                <hr class="lineWide">
+                <div th:each="teacher:${teachers}">
+                    <div class="block_profile">
+                        <h2 th:text="${teacher.surname + ' ' + teacher.name +' '+ teacher.patronymic}"></h2>
+                        <form th:action="@{/openChat}" method="get">
+                            <input type="hidden" name="userId" th:value="${teacher.email}">
+                            <button type="submit" class="button_send_message">Написати</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
+</body>
+</html>

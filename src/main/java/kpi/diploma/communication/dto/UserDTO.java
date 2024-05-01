@@ -24,4 +24,6 @@ public class UserDTO {
     private Set<Role> roles;
 
     private String group;
+    private String speciality;
+    private int course;
 }

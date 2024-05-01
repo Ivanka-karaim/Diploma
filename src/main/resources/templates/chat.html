@@ -3,34 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/main.css">
-    <title>Chat Application</title>
+    <link rel="stylesheet" th:href="@{/css/chat.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/posts.css}">
+    <title>Chat</title>
 </head>
 <body>
+<header class="header">
+    <div class="my_container header_in">
+        <a th:href="@{/}">
+            <img class="logo" src="/img/logo.png" alt="Logo">
+        </a>
+        <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+    </div>
+</header>
 
-<h2>One to One Chat | Spring boot & Websocket | By Alibou</h2>
 
 
+<div class="my_container" id="chat-page">
+    <div class="post_container" style="padding-top: 10px">
+        <h2 th:text="${receiver.name +' '+receiver.surname}"></h2>
+        <div class="chat-container">
+            <p id="fullname" th:text="${sender}" style="display: none"></p>
+            <p id="receiver" th:text="${receiver.email}" style="display: none"></p>
 
-<div class="chat-container" id="chat-page">
-    <p id="fullname" th:text="${sender}" class="hidden"></p>
-    <p id="receiver" th:text="${receiver}" class="hidden"></p>
-
-    <div class="chat-area">
-        <div class="chat-area" id="chat-messages">
+            <div class="chat-area">
+                <div class="chat-area" id="chat-messages">
+                </div>
+            </div>
         </div>
-
+        <div style="height:30px"></div>
         <form id="messageForm" name="messageForm">
-            <div class="message-input">
-                <input autocomplete="off" type="text" id="message" placeholder="Type your message...">
-                <button>Send</button>
+            <div class="form" style="max-width: 1000px; min-width:400px">
+                <input class="input_comment" style="background-color: white" autocomplete="off" type="text" id="message" placeholder="Напишіть своє повідомлення...">
+                <button class="button_send_comment">Надіслати</button>
             </div>
         </form>
     </div>
+
 </div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
 </body>
 </html>
