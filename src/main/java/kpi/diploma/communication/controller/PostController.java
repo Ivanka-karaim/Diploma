@@ -6,6 +6,7 @@ import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
 import kpi.diploma.communication.model.Group;
+import kpi.diploma.communication.model.Role;
 import kpi.diploma.communication.model.User;
 import kpi.diploma.communication.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/posts")
@@ -98,17 +101,21 @@ public class PostController {
         return "redirect:/posts/"+postId;
     }
 
-    @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
-    @PostMapping("/addPostForStudents")
-    public String addPostForStudents(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("groups") List<String> groups, @RequestParam("post") PostDTO postDTO){
-        postService.addPostForStudents(userDetails.getUsername(), groups, postDTO);
+
+
+
+
+    @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER,T(kpi.diploma.communication.model.Role).CURATOR, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
+    @PostMapping("/addPost")
+    public String addPostForStudents(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("groups") List<String> groups, @RequestParam("title") String title, @RequestParam("description") String description){
+        postService.addPostForStudents(userDetails.getUsername(), groups, title, description);
         return "redirect:/myPosts";
     }
 
     @PreAuthorize("hasAnyRole( T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
     @PostMapping("/addPostForUsers")
-    public String addPostForUsers(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("users") List<String> users, @RequestParam("post") PostDTO postDTO){
-        postService.addPostForUsers(userDetails.getUsername(), users, postDTO);
+    public String addPostForUsers(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("users") List<String> users,@RequestParam("title") String title, @RequestParam("description") String description){
+        postService.addPostForUsers(userDetails.getUsername(), users, title, description);
         return "redirect:/myPosts";
     }
 

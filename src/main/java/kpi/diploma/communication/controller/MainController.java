@@ -5,6 +5,7 @@ import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
 import kpi.diploma.communication.model.Role;
+import kpi.diploma.communication.model.User;
 import kpi.diploma.communication.service.ChatService;
 import kpi.diploma.communication.service.GroupService;
 import kpi.diploma.communication.service.PostService;
@@ -16,12 +17,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -78,8 +77,9 @@ public class MainController {
     @GetMapping("/myPosts")
     public String getMyPosts(@AuthenticationPrincipal UserDetails userDetails, Model model){
         List<PostDTO> postDTOS = postService.getPostsForAuthor(userDetails.getUsername());
-        model.addAttribute("posts", postDTOS);
+        model.addAttribute("savedPosts", postDTOS);
         model.addAttribute("isMyPosts", true);
+        System.out.println(postDTOS);
         return "saved";
 
     }
@@ -104,6 +104,77 @@ public class MainController {
         model.addAttribute("groupTitle", groupTitle);
         return "students";
     }
+
+    @GetMapping("/addPost")
+    @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER,  T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
+    public String addPost(@AuthenticationPrincipal UserDetails userDetails, Model model,@RequestParam(name = "specialities", required = false) List<String> specialitiesHTML,
+                          @RequestParam(name = "courses", required = false) List<Integer> coursesHTML){
+        System.out.println(coursesHTML);
+        User user = userService.getUserById(userDetails.getUsername());
+        List<GroupDTO> groups;
+        if(user.getRoles().contains(Role.RESPONSIBLE)){
+            groups = groupService.getAllGroups();
+        }else {
+            groups = groupService.getGroupsForTeacher(userDetails.getUsername());
+
+        }
+        List<Integer> courses = groups.stream()
+                .map(GroupDTO::getCourse)
+                .distinct()
+                .sorted(Integer::compareTo)
+                .toList();
+
+        model.addAttribute("courses", courses);
+        List<String> specialities = groups.stream()
+                .map(GroupDTO::getSpeciality)
+                .distinct()
+                .sorted(String::compareTo)
+                .toList();
+        model.addAttribute("specialities", specialities);
+
+        if(specialitiesHTML != null && coursesHTML != null){
+
+            List<GroupDTO> filteredGroups = groups.stream()
+                    .filter(group -> specialitiesHTML.contains(group.getSpeciality()) && coursesHTML.contains(group.getCourse()))
+                    .toList();
+            model.addAttribute("groups", filteredGroups);
+            model.addAttribute("specialityCheck", specialitiesHTML);
+            model.addAttribute("courseCheck", coursesHTML);
+        }else {
+            model.addAttribute("groups", groups);
+        }
+
+
+
+
+        System.out.println(groups);
+
+        return "addPost";
+    }
+
+//    @PostMapping("/submitFilters")
+//    public String submitFilters(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(name = "specialities", required = false) List<String> specialities,
+//                                @RequestParam(name = "courses", required = false) List<String> courses) {
+//
+//        User user = userService.getUserById(userDetails.getUsername());
+//        List<GroupDTO> groups;
+//        if(user.getRoles().contains(Role.RESPONSIBLE)){
+//            groups = groupService.getAllGroups();
+//        }else {
+//            groups = groupService.getGroupsForTeacher(userDetails.getUsername());
+//
+//        }
+//
+//        List<GroupDTO> filteredGroups = groups.stream()
+//                .filter(group -> specialities.contains(group.getSpeciality()) && courses.contains(String.valueOf(group.getCourse())))
+//                .toList();
+//
+//
+//        System.out.println("Specialities: " + specialities);
+//        System.out.println("Courses: " + courses);
+//
+//        return "addPost";
+//    }
 
 
     @GetMapping("/profile/saved")

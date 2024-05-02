@@ -96,6 +96,29 @@ body {
     flex: 1;
     display: flex;
 }
+.text_spec_course{
+    font-family: InikaRegular, serif;
+    font-size: 20px;
+    line-height: 30px;
+
+}
+input[type="checkbox"] {
+    display: none;
+}
+.checkbox-custom {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+}
+
+
+.checkbox-custom:checked {
+    background-color: yellow;
+}
 
 .vert_line {
     width: 0;
@@ -138,6 +161,74 @@ body {
     box-shadow: none;
     cursor: pointer;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* Ховаємо оригінальний чекбокс */
+.checkbox-container input {
+    display: none;
+}
+
+/* Створюємо контейнер для стилізованого чекбокса */
+.checkbox-container {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+    user-select: none;
+
+    font-family: InikaRegular, serif;
+    font-size: 22px;
+    line-height: 24px;
+    margin-left: 20px;
+}
+
+/* Створюємо позначку (checkmark) */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    border-radius: 20%;
+    border: 2px solid #ccc;
+    margin-right: 20px;
+
+}
+
+/* Змінюємо колір позначки, коли вона вибрана */
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #FCD95B;
+}
+
+/* Змінюємо форму позначки на квадрат, коли вона вибрана */
+.checkbox-container input:checked ~ .checkmark:after {
+    content: "";
+    position: absolute;
+    display: block;
+    left: 7px;
+    top: 4px;
+    width: 7px;
+    height: 12px;
+    border: solid #333;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.block_checkbox{
+    margin-right: 20px;
+}
+
 
 
 

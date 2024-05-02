@@ -62,14 +62,14 @@ public class PostService {
         }
     }
 
-    private void addPost(String authorEmail, List<User> users, PostDTO postDTO ){
+    private void addPost(String authorEmail, List<User> users,String title, String description ){
         User author = userService.getUserById(authorEmail);
         Post post = Post.builder()
                 .author(author)
                 .dateTime(java.sql.Timestamp.valueOf(LocalDateTime.now()))
-                .description(postDTO.getDescription())
-                .title(postDTO.getTitle())
-                .type(postDTO.getType())
+                .description(description)
+                .title(title)
+                .type("IMPORTANT")
                 .build();
         postRepository.save(post);
         for(User user:users){
@@ -82,23 +82,23 @@ public class PostService {
 
     }
 
-    public void addPostForUsers(String authorEmail,List<String> listUser,PostDTO postDTO){
+    public void addPostForUsers(String authorEmail,List<String> listUser,String title, String description){
         List<User> users = new ArrayList<>();
         for(String user: listUser){
             users.add(userService.getUserById(user));
 
         }
-        addPost(authorEmail, users, postDTO);
+        addPost(authorEmail, users, title, description);
 
     }
 
-    public void addPostForStudents(String authorEmail,List<String> groups, PostDTO postDTO){
+    public void addPostForStudents(String authorEmail,List<String> groups, String title, String description){
         List<User> students = new ArrayList<>();
         for(String group: groups) {
             students.addAll( userRepository.findByGroupTitle(group));
 
         }
-        addPost(authorEmail, students, postDTO);
+        addPost(authorEmail, students, title, description);
 
     }
 

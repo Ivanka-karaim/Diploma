@@ -1,5 +1,6 @@
 package kpi.diploma.communication.service;
 
+import kpi.diploma.communication.data.GroupRepository;
 import kpi.diploma.communication.data.UserGroupRepository;
 import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.GroupDTO;
@@ -19,6 +20,14 @@ public class GroupService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
+    public List<GroupDTO> getAllGroups(){
+        List<Group> groups = (List<Group>) groupRepository.findAll();
+        return parseGroupListToDTO(groups);
+    }
     public List<GroupDTO> getGroupsForTeacher(String teacherEmail){
         List<Group> groups = userGroupRepository.findGroupsByUserEmail(teacherEmail);
         return parseGroupListToDTO(groups);

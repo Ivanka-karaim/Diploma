@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/posts.css}">
+    <title>Chat</title>
+</head>
+<body>
+<header class="header">
+    <div class="my_container header_in">
+        <a th:href="@{/}">
+            <img class="logo" src="/img/logo.png" alt="Logo">
+        </a>
+        <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+    </div>
+</header>
+<div class="my_container">
+    <div class="post_container">
+        <form id="filterForm" th:action="@{/addPost}" method="get" class="flex" style="align-items: center">
+
+            <div class="post_block" style="margin-right: 20px;width: auto">
+                <div class="flex">
+
+                    <div th:each="speciality: ${specialities}">
+                        <div th:if="${specialityCheck!=null}">
+
+                            <div th:if="${#lists.contains(specialityCheck, speciality)}" class="block_checkbox">
+                                <label class="checkbox-container"><input type="checkbox" th:value="${speciality}"
+                                                                         name="specialities"
+                                                                         th:text="${speciality}" checked>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div th:if="${!#lists.contains(specialityCheck, speciality)}" class="block_checkbox">
+                                <label class="checkbox-container"><input type="checkbox" th:value="${speciality}"
+                                                                         name="specialities"
+                                                                         class="text_spec_course checkbox-custom"
+                                                                         th:text="${speciality}"><span
+                                        class="checkmark"></span></label>
+                            </div>
+                        </div>
+
+
+                        <div th:if="${specialityCheck == null}">
+
+                            <div class="block_checkbox">
+                                <label class="checkbox-container"><input type="checkbox" th:value="${speciality}"
+                                                                         name="specialities"
+                                                                         th:text="${speciality}" checked><span
+                                        class="checkmark"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="post_block" style="margin:  0 20px; width: auto">
+                <div class="flex">
+                    <div th:each="course: ${courses}">
+                        <div th:if="${courseCheck!=null}">
+                            <div>
+                                <div th:if="${#lists.contains(courseCheck, course)}" class="block_checkbox">
+                                    <label class="checkbox-container"><input type="checkbox" th:value="${course}"
+                                                                             th:text="${course}" name="courses"
+                                                                             checked><span
+                                            class="checkmark"></span></label>
+                                </div>
+                                <div th:if="${!#lists.contains(courseCheck, course)}" class="block_checkbox">
+                                    <label class="checkbox-container"><input type="checkbox" th:value="${course}"
+                                                                             th:text="${course}" name="courses"
+                                    ><span class="checkmark"></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${courseCheck==null}">
+                            <div class="block_checkbox">
+                                <label class="checkbox-container"><input type="checkbox" th:value="${course}"
+                                                                         th:text="${course}" name="courses"
+                                                                         checked><span class="checkmark"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="button_send_comment" style="margin-left: 10px">Надіслати</button>
+        </form>
+
+        <form th:action="@{/posts/addPost}" method="post">
+            <div class="post_block">
+                <div th:each="group:${groups}">
+                    <div class="block_profile">
+                        <label class="checkbox-container"><input type="checkbox" th:value="${group.title}"
+                                                                 th:text="${group.title}" name="groups" checked><span
+                                class="checkmark"></span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form" style="flex-direction: column; position: relative; width: 100%;">
+                <input name="title" class="input_post" style="height: 50px" placeholder="Назва">
+                <textarea name="description" rows="5" class="input_post" placeholder="Опис"></textarea>
+                <input type="submit" class="button_send_comment" value="Надіслати">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!--<input type="hidden" name="groups" th:value="${groups}">-->
+<!--<div class="my_container">-->
+<!--    <div class="post_container">-->
+<!--        <div class="post_block">-->
+<!--            <div style="display: none" th:each="group:${groups}">-->
+<!--                <div class="block_profile">-->
+<!--                    <h2 th:text="${group.title}"></h2>-->
+<!--                    <input type="hidden" name="course" th:value="${group.course}">-->
+<!--                    <input type="hidden" name="speciality" th:value="${group.speciality}">-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div id="groups" class="">-->
+
+<!--            </div>-->
+<!--        </div>-->
+<!--        <label for="listCourse">Курс</label>-->
+<!--        <div id="listCourse">-->
+<!--            <label><input type="checkbox" value="1"> 1</label>-->
+<!--            <label><input type="checkbox" value="2"> 2</label>-->
+<!--            <label><input type="checkbox" value="3"> 3</label>-->
+<!--            <label><input type="checkbox" value="4"> 4</label>-->
+<!--        </div>-->
+
+<!--        <label for="listSpeaciality">Спеціальність</label>-->
+<!--        <div id="listSpeaciality">-->
+<!--            <label><input type="checkbox" value="121"> 121</label>-->
+<!--            <label><input type="checkbox" value="122"> 122</label>-->
+<!--        </div>-->
+
+
+<!--    </div>-->
+<!--</div>-->
+<script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var groupElements = document.querySelectorAll(".block_profile");
+        var groups = [];
+        groupElements.forEach(function (groupElement) {
+            var groupData = {
+                title: groupElement.querySelector("h2").textContent.trim(),
+                course: groupElement.querySelector("input[name='course']").value.trim(),
+                speciality: groupElement.querySelector("input[name='speciality']").value.trim()
+            };
+            groups.push(groupData);
+        });
+
+        var groupsAll = document.querySelector("input[name='groups']").value.trim()
+        console.log(groupsAll)
+        console.log(groups);
+
+
+        var groupsHTML = document.getElementById("groups");
+        groups.forEach(function (value) {
+
+            var checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = value.title;
+            var label = document.createElement("label");
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(value.title));
+            groupsHTML.appendChild(label);
+        });
+
+    });
+</script>
+</body>
+</html>
