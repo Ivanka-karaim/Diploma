@@ -22,9 +22,10 @@
 </header>
 <div class="my_container">
     <div class="post_container">
+        <h1>Фільтри</h1>
         <form id="filterForm" th:action="@{/addPost}" method="get" class="flex" style="align-items: center">
-
             <div class="post_block" style="margin-right: 20px;width: auto">
+                <h2>Спеціальності</h2>
                 <div class="flex">
 
                     <div th:each="speciality: ${specialities}">
@@ -60,6 +61,7 @@
                 </div>
             </div>
             <div class="post_block" style="margin:  0 20px; width: auto">
+                <h2>Курси</h2>
                 <div class="flex">
                     <div th:each="course: ${courses}">
                         <div th:if="${courseCheck!=null}">
@@ -90,8 +92,10 @@
             <button type="submit" class="button_send_comment" style="margin-left: 10px">Надіслати</button>
         </form>
 
-        <form th:action="@{/posts/addPost}" method="post">
+        <form th:action="@{/posts/addPost}" method="post" class="block_addPost">
+            <h1>Додавання посту</h1>
             <div class="post_block">
+                <h2>Групи</h2>
                 <div th:each="group:${groups}">
                     <div class="block_profile">
                         <label class="checkbox-container"><input type="checkbox" th:value="${group.title}"
@@ -100,10 +104,17 @@
                     </div>
                 </div>
             </div>
-            <div class="form" style="flex-direction: column; position: relative; width: 100%;">
-                <input name="title" class="input_post" style="height: 50px" placeholder="Назва">
-                <textarea name="description" rows="5" class="input_post" placeholder="Опис"></textarea>
-                <input type="submit" class="button_send_comment" value="Надіслати">
+            <div class="form_addInfoPost  " >
+
+                <label class="checkbox-container">
+                    <input name="isLeaderGroup" th:value="${true}" type="checkbox" >Тільки для старост<span
+                        class="checkmark"></span></label>
+                <label class="checkbox-container">
+                    <input name="isCurator" th:value="${true}" type="checkbox" >Тільки для кураторів<span
+                        class="checkmark"></span></label>
+                <input name="title" class="input_post" style="height: 50px; margin-top: 20px" placeholder="Назва">
+                <textarea name="description" rows="5" class="input_post" style="margin-top: 20px;padding:20px" placeholder="Опис"></textarea>
+                <input type="submit" class="button_send_addPost" style="margin-top: 20px; height:50px" value="Надіслати">
             </div>
         </form>
     </div>

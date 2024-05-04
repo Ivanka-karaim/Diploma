@@ -92,13 +92,31 @@ public class PostService {
 
     }
 
-    public void addPostForStudents(String authorEmail,List<String> groups, String title, String description){
-        List<User> students = new ArrayList<>();
+    public void addPostForStudents(String authorEmail,List<String> groups, String title, String description, boolean isLeaderGroup, boolean isCurator){
+        List<User> users = new ArrayList<>();
+
+
         for(String group: groups) {
-            students.addAll( userRepository.findByGroupTitle(group));
+            users.addAll( userRepository.findByGroupTitle(group));
 
         }
-        addPost(authorEmail, students, title, description);
+        List<User> filteredUsers;
+        if(isLeaderGroup && isCurator){
+            filteredUsers = users.stream()
+                    .filter(user -> user.getRoles().containsAll(List.of(Role.CURATOR, Role.LEADER_GROUP)) )
+                    .toList();
+        }else if(isCurator){
+            filteredUsers = users.stream()
+                    .filter(user -> user.getRoles().contains(Role.CURATOR) )
+                    .toList();
+        } else if(isLeaderGroup){
+            filteredUsers = users.stream()
+                    .filter(user -> user.getRoles().contains(Role.LEADER_GROUP) )
+                    .toList();
+        }else{
+            filteredUsers = users;
+        }
+        addPost(authorEmail, filteredUsers, title, description);
 
     }
 

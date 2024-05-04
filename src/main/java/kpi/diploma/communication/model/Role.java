@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum Role implements GrantedAuthority {
-    STUDENT, TEACHER, CURATOR, RESPONSIBLE, MAIN ;
+    STUDENT, TEACHER, CURATOR, RESPONSIBLE, MAIN, LEADER_GROUP ;
 
     @Override
     public String getAuthority() {

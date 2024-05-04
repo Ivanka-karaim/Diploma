@@ -96,15 +96,18 @@ body {
     flex: 1;
     display: flex;
 }
-.text_spec_course{
+
+.text_spec_course {
     font-family: InikaRegular, serif;
     font-size: 20px;
     line-height: 30px;
 
 }
+
 input[type="checkbox"] {
     display: none;
 }
+
 .checkbox-custom {
     display: inline-block;
     width: 20px;
@@ -139,38 +142,30 @@ input[type="checkbox"] {
 
 }
 
-.button_watch_list_students{
+.button_watch_list_students {
     color: black;
     font-size: 22px;
     line-height: 30px;
     background: transparent;
     border: none;
 }
-.button_watch_list_students:hover{
+
+.button_watch_list_students:hover {
     cursor: pointer;
     background: #686868;
 }
-.button_logout{
+
+.button_logout {
 
     padding: 20px 50px;
     border-radius: 12px;
     background-color: #FCD95B;
     color: black;
-    border:none;
+    border: none;
     font-size: 25px;
     box-shadow: none;
     cursor: pointer;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 /* Ховаємо оригінальний чекбокс */
@@ -225,8 +220,28 @@ input[type="checkbox"] {
     transform: rotate(45deg);
 }
 
-.block_checkbox{
+.block_checkbox {
     margin-right: 20px;
+}
+
+.block_addPost {
+    margin-top: 50px;
+}
+
+.form_addInfoPost {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    margin-top: 30px;
+}
+.button_send_addPost{
+    height: 50px;
+    border-radius: 12px;
+    background-color: #FCD95B;
+    color: black;
+    border:none;
+    box-shadow: none;
 }
 
 

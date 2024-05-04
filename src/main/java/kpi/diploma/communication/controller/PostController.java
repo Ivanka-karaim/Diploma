@@ -107,8 +107,8 @@ public class PostController {
 
     @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER,T(kpi.diploma.communication.model.Role).CURATOR, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
     @PostMapping("/addPost")
-    public String addPostForStudents(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("groups") List<String> groups, @RequestParam("title") String title, @RequestParam("description") String description){
-        postService.addPostForStudents(userDetails.getUsername(), groups, title, description);
+    public String addPostForStudents(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("groups") List<String> groups, @RequestParam("title") String title, @RequestParam("description") String description, @RequestParam(name="isLeaderGroup", required = false) boolean isLeaderGroup, @RequestParam(name="isCurator", required = false) boolean isCurator){
+        postService.addPostForStudents(userDetails.getUsername(), groups, title, description, isLeaderGroup, isCurator);
         return "redirect:/myPosts";
     }
 
