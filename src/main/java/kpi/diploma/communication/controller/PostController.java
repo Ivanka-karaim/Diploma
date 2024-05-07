@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/posts")
@@ -112,16 +113,21 @@ public class PostController {
         return "redirect:/myPosts";
     }
 
-    @PreAuthorize("hasAnyRole( T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
-    @PostMapping("/addPostForUsers")
-    public String addPostForUsers(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("users") List<String> users,@RequestParam("title") String title, @RequestParam("description") String description){
-        postService.addPostForUsers(userDetails.getUsername(), users, title, description);
-        return "redirect:/myPosts";
+    @PreAuthorize("hasAuthority( 'RESPONSIBLE')")
+    @GetMapping("/addPostForUsers")
+    public String addPostForUsersGet(Model model){
+        List<UserDTO> curators = userService.getAllCurators();
+        List<UserDTO> teachers = userService.getAllTeachers();
+
+        model.addAttribute("curators", curators);
+        model.addAttribute("teachers", teachers);
+        return "addPostForUsers";
     }
 
-
-
-
-
-
+    @PreAuthorize("hasAuthority( 'RESPONSIBLE')")
+    @PostMapping("/addPostForUsers")
+    public String addPostForUsers(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("curators") List<String> curators,@RequestParam("teachers") List<String> teachers,@RequestParam("title") String title, @RequestParam("description") String description){
+        postService.addPostForUsers(userDetails.getUsername(), Stream.concat(curators.stream(), teachers.stream()).distinct().collect(Collectors.toList()), title, description);
+        return "redirect:/myPosts";
+    }
 }

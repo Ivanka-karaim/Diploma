@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/posts.css}">
+    <title>Chat</title>
+</head>
+<body>
+<header class="header">
+    <div class="my_container header_in">
+        <a th:href="@{/}">
+            <img class="logo" src="/img/logo.png" alt="Logo">
+        </a>
+        <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+    </div>
+</header>
+<div class="my_container">
+    <div class="post_container">
+        <form th:action="@{/posts/addPostForUsers}" method="post" class="block_addPost">
+            <h1>Додавання посту</h1>
+            <div class="post_block">
+                <div class="flex" style="justify-content: space-between">
+                    <h2>Куратори</h2>
+                    <div>
+                        <div class="block_profile">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="select-all-curators" checked>
+                                <span class="checkmark"></span>
+                                Всі куратори
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div th:each="curator:${curators}">
+                    <div class="block_profile">
+                        <label class="checkbox-container"><input type="checkbox" th:value="${curator.email}"
+                                                                 th:text="${curator.surname + ' '+curator.name+' - '+curator.group}"
+                                                                 name="curators" checked><span
+                                class="checkmark"></span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="post_block">
+                <div class="flex" style="justify-content: space-between">
+                    <h2>Викладачі</h2>
+                    <div>
+                        <div class="block_profile">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="select-all-teachers" checked>
+                                <span class="checkmark"></span>
+                                Всі викладачі
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div th:each="teacher:${teachers}">
+                    <div class="block_profile">
+                        <label class="checkbox-container"><input type="checkbox" th:value="${teacher.email}"
+                                                                 th:text="${teacher.surname + ' '+teacher.name}"
+                                                                 name="teachers" checked><span
+                                class="checkmark"></span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form_addInfoPost  ">
+                <input name="title" class="input_post" style="height: 50px; margin-top: 20px" placeholder="Назва">
+                <textarea name="description" rows="5" class="input_post" style="margin-top: 20px;padding:20px"
+                          placeholder="Опис"></textarea>
+                <input type="submit" class="button_send_addPost" style="margin-top: 20px; height:50px"
+                       value="Надіслати">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!--<input type="hidden" name="groups" th:value="${groups}">-->
+<!--<div class="my_container">-->
+<!--    <div class="post_container">-->
+<!--        <div class="post_block">-->
+<!--            <div style="display: none" th:each="group:${groups}">-->
+<!--                <div class="block_profile">-->
+<!--                    <h2 th:text="${group.title}"></h2>-->
+<!--                    <input type="hidden" name="course" th:value="${group.course}">-->
+<!--                    <input type="hidden" name="speciality" th:value="${group.speciality}">-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div id="groups" class="">-->
+
+<!--            </div>-->
+<!--        </div>-->
+<!--        <label for="listCourse">Курс</label>-->
+<!--        <div id="listCourse">-->
+<!--            <label><input type="checkbox" value="1"> 1</label>-->
+<!--            <label><input type="checkbox" value="2"> 2</label>-->
+<!--            <label><input type="checkbox" value="3"> 3</label>-->
+<!--            <label><input type="checkbox" value="4"> 4</label>-->
+<!--        </div>-->
+
+<!--        <label for="listSpeaciality">Спеціальність</label>-->
+<!--        <div id="listSpeaciality">-->
+<!--            <label><input type="checkbox" value="121"> 121</label>-->
+<!--            <label><input type="checkbox" value="122"> 122</label>-->
+<!--        </div>-->
+
+
+<!--    </div>-->
+<!--</div>-->
+<script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
+<script>
+    // JavaScript для управління загальним чекбоксом
+    document.getElementById('select-all-curators').addEventListener('change', function () {
+        var checkboxes = document.querySelectorAll('input[name="curators"]');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = document.getElementById('select-all-curators').checked;
+        });
+    });
+    document.getElementById('select-all-teachers').addEventListener('change', function () {
+        var checkboxes = document.querySelectorAll('input[name="teachers"]');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = document.getElementById('select-all-teachers').checked;
+        });
+    });
+</script>
+</body>
+</html>

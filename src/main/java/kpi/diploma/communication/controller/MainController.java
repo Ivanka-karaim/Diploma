@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,15 +52,18 @@ public class MainController {
         model.addAttribute("user", userDTO);
         if(userDTO.getRoles().contains(Role.STUDENT)){
             model.addAttribute("isStudent", true);
-        }else{
-            model.addAttribute("isStudent", false);
+        }else if(userDTO.getRoles().contains(Role.TEACHER) || userDTO.getRoles().contains(Role.CURATOR)){
+            model.addAttribute("isTeacher", true);
+        }
+        if(userDTO.getRoles().contains(Role.RESPONSIBLE)){
+            model.addAttribute("isResponsible", true);
         }
         return "profile";
 
 
     }
 
-    @PreAuthorize("hasRole(T(kpi.diploma.communication.model.Role).STUDENT)")
+    @PreAuthorize("hasAuthority('STUDENT')")
     @GetMapping("/profile/teachers")
     public String teachers(@AuthenticationPrincipal UserDetails userDetails, Model model){
         UserDTO userDTO = userService.getUserDTOById(userDetails.getUsername());
@@ -73,7 +77,7 @@ public class MainController {
 
     }
 
-    @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER, T(kpi.diploma.communication.model.Role).RESPONSIBLE, T(kpi.diploma.communication.model.Role).CURATOR)")
+    @PreAuthorize("hasAnyAuthority('TEACHER', 'RESPONSIBLE', 'CURATOR')")
     @GetMapping("/myPosts")
     public String getMyPosts(@AuthenticationPrincipal UserDetails userDetails, Model model){
         List<PostDTO> postDTOS = postService.getPostsForAuthor(userDetails.getUsername());
@@ -111,13 +115,14 @@ public class MainController {
                           @RequestParam(name = "courses", required = false) List<Integer> coursesHTML){
         System.out.println(coursesHTML);
         User user = userService.getUserById(userDetails.getUsername());
-        List<GroupDTO> groups;
+        List<GroupDTO> groups = new ArrayList<>();
         if(user.getRoles().contains(Role.RESPONSIBLE)){
             groups = groupService.getAllGroups();
-        }else {
+        }else if(user.getRoles().contains(Role.TEACHER) || user.getRoles().contains(Role.CURATOR)){
             groups = groupService.getGroupsForTeacher(userDetails.getUsername());
 
         }
+
         List<Integer> courses = groups.stream()
                 .map(GroupDTO::getCourse)
                 .distinct()

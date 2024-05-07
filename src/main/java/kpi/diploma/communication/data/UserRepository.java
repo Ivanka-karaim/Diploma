@@ -12,4 +12,6 @@ public interface UserRepository extends CrudRepository<User, String> {
 
     List<User> findByGroupTitle(String group);
 
+    List<User> findByRolesContaining(Role role);
+
 }

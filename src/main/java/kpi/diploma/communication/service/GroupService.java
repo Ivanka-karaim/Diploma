@@ -30,6 +30,10 @@ public class GroupService {
     }
     public List<GroupDTO> getGroupsForTeacher(String teacherEmail){
         List<Group> groups = userGroupRepository.findGroupsByUserEmail(teacherEmail);
+        User user = userService.getUserById(teacherEmail);
+        if(user.getGroup()!=null){
+            groups.add(user.getGroup());
+        }
         return parseGroupListToDTO(groups);
     }
 

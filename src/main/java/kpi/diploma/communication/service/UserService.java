@@ -27,6 +27,17 @@ public class UserService {
     @Autowired
     private UserGroupRepository userGroupRepository;
 
+
+    public List<UserDTO> getAllCurators(){
+        List<User> users = userRepository.findByRolesContaining(Role.CURATOR);
+        return parseUserListDTO(users);
+    }
+
+    public List<UserDTO> getAllTeachers(){
+        List<User> users = userRepository.findByRolesContaining(Role.TEACHER);
+        return parseUserListDTO(users);
+    }
+
     private List<UserDTO> parseUserListDTO(List<User> users) {
         return users.stream()
                 .map(this::getUserDTO)
