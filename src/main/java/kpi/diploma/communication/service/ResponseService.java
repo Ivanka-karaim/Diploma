@@ -29,9 +29,9 @@ public class ResponseService {
 
     }
 
-    public boolean saveResponse(String userName, String text, Long commentId){
+    public boolean saveResponse(String userEmail, String text, Long commentId){
         try {
-            User user = userService.getUserById(userName);
+            User user = userService.getUserById(userEmail);
             Response response = new Response();
             response.setUser(user);
             response.setText(text);

@@ -10,12 +10,14 @@ import kpi.diploma.communication.model.Role;
 import kpi.diploma.communication.model.User;
 import kpi.diploma.communication.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,10 @@ public class PostController {
     private ResponseService responseService;
 
     @Autowired
-    private GroupService groupService;
+    private AIService aiService;
+
+    @Value("${aiID}")
+    private String aiID;
 
     @GetMapping("")
     public String getPosts(@AuthenticationPrincipal UserDetails userDetails, Model model, @RequestParam(value = "page", required = false) Long page){
@@ -65,7 +70,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String getPost(@AuthenticationPrincipal UserDetails userDetails,@PathVariable("id") Long id,  Model model){
+    public String getPost(@AuthenticationPrincipal UserDetails userDetails,@PathVariable("id") Long id, @RequestParam(name = "errorMessage", required = false) String errorMessage,  Model model){
         PostDTO post = postService.getPostById(id);
         model.addAttribute("post",post);
         List<CommentDTO> commentDTOS = commentService.getCommentsForPost(post.id);
@@ -73,6 +78,9 @@ public class PostController {
 
         List<PostDTO> savedPosts = postService.getListSaved(userDetails.getUsername());
         model.addAttribute("savedPosts", savedPosts);
+
+        model.addAttribute("aiID", aiID);
+        model.addAttribute("errorMessage", errorMessage);
         return "post";
     }
 
@@ -89,16 +97,23 @@ public class PostController {
     }
 
     @PostMapping("/writeComment")
-    public String writeComment(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("comment") String comment, @RequestParam("postId") Long postId){
+    public String writeComment(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("comment") String comment, @RequestParam("postId") Long postId, RedirectAttributes redirectAttributes){
         System.out.println(1111111);
-        commentService.saveComment(userDetails.getUsername(), comment, postId);
+        boolean answer = aiService.saveComment(postId,comment,userDetails.getUsername());
+        System.out.println(answer);
+        if(!answer){
+            redirectAttributes.addAttribute("errorMessage", "Ви вживаєте ненормативну лексику, тому ваш коментар не було додано!!!");
+        }
         return "redirect:/posts/"+postId;
     }
 
     @PostMapping("/writeResponse")
-    public String writeResponse(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("response") String response, @RequestParam("commentId") Long commentId, @RequestParam("postId") Long postId){
-        System.out.println(1111111);
-        boolean saveComment = responseService.saveResponse(userDetails.getUsername(), response, commentId);
+    public String writeResponse(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("response") String response, @RequestParam("commentId") Long commentId, @RequestParam("postId") Long postId, RedirectAttributes redirectAttributes){
+        boolean answer = aiService.saveResponse(commentId,response,userDetails.getUsername());
+        System.out.println(answer);
+        if(!answer){
+            redirectAttributes.addAttribute("errorMessage", "Ви вживаєте ненормативну лексику, тому ваш коментар не було додано!!!");
+        }
         return "redirect:/posts/"+postId;
     }
 

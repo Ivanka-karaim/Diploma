@@ -20,5 +20,6 @@ public class CommentDTO {
     private String text;
     private UserDTO user;
     private Timestamp dateTime;
+    private ResponseDTO responseAI=null;
     private List<ResponseDTO> responses;
 }

@@ -238,3 +238,13 @@
     margin-right: 20px;
 }
 
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* напівпрозорий сірий фон */
+    z-index: 9999; /* забезпечує, що елемент буде поверх інших елементів */
+}

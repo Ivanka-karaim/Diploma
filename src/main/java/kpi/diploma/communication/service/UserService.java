@@ -10,6 +10,7 @@ import kpi.diploma.communication.model.Post;
 import kpi.diploma.communication.model.Role;
 import kpi.diploma.communication.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import kpi.diploma.communication.dto.Error;
 
@@ -26,6 +27,23 @@ public class UserService {
 
     @Autowired
     private UserGroupRepository userGroupRepository;
+    @Value("${aiID}")
+    private String aiID;
+
+    public User getAI(){
+        User user = userRepository.findById(aiID).orElse(null);
+        if(user == null){
+            user = User.builder()
+                    .email(aiID)
+                    .name("віртуоз")
+                    .surname("Університетний ")
+                    .patronymic("Кпішник")
+                    .password("111111").build();
+            userRepository.save(user);
+        }
+        return user;
+
+    }
 
 
     public List<UserDTO> getAllCurators(){
