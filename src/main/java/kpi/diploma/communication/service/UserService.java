@@ -1,5 +1,6 @@
 package kpi.diploma.communication.service;
 
+import kpi.diploma.communication.data.PostForUserRepository;
 import kpi.diploma.communication.data.UserGroupRepository;
 import kpi.diploma.communication.data.UserRepository;
 import kpi.diploma.communication.dto.GroupDTO;
@@ -27,6 +28,10 @@ public class UserService {
 
     @Autowired
     private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private PostForUserRepository postForUserRepository;
+
     @Value("${aiID}")
     private String aiID;
 
@@ -100,6 +105,10 @@ public class UserService {
             teacherDTOs.add(getUserDTO(teacher));
         }
         return teacherDTOs;
+    }
+    public List<UserDTO> getUsersByPost(Long postId){
+        List<User> users = postForUserRepository.findUsersByPost(postId);
+        return parseUserListDTO(users);
     }
 
     public List<Error> validationData(User user, String passwordRepeat){

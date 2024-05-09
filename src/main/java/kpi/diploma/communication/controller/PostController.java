@@ -2,11 +2,8 @@ package kpi.diploma.communication.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kpi.diploma.communication.dto.CommentDTO;
-import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
-import kpi.diploma.communication.model.Group;
-import kpi.diploma.communication.model.Role;
 import kpi.diploma.communication.model.User;
 import kpi.diploma.communication.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,7 +118,7 @@ public class PostController {
 
 
 
-    @PreAuthorize("hasAnyRole(T(kpi.diploma.communication.model.Role).TEACHER,T(kpi.diploma.communication.model.Role).CURATOR, T(kpi.diploma.communication.model.Role).RESPONSIBLE)")
+    @PreAuthorize("hasAnyAuthority('TEACHER', 'CURATOR', 'RESPONSIBLE')")
     @PostMapping("/addPost")
     public String addPostForStudents(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("groups") List<String> groups, @RequestParam("title") String title, @RequestParam("description") String description, @RequestParam(name="isLeaderGroup", required = false) boolean isLeaderGroup, @RequestParam(name="isCurator", required = false) boolean isCurator){
         postService.addPostForStudents(userDetails.getUsername(), groups, title, description, isLeaderGroup, isCurator);

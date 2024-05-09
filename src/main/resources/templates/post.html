@@ -90,6 +90,7 @@
                     <p style="font-size: 18px; margin-bottom: 0" th:text="${el.text}"></p>
                     <button class="button_reply" th:onclick="'openWindowForResponse('+${el.id}+')'">Відповісти</button>
                 </div>
+                </div>
                 <div th:if="${el.responseAI!=null}">
                     <div class="response">
                         <div class="flex_space_between">

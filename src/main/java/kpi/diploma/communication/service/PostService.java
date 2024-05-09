@@ -95,10 +95,8 @@ public class PostService {
     public void addPostForStudents(String authorEmail,List<String> groups, String title, String description, boolean isLeaderGroup, boolean isCurator){
         List<User> users = new ArrayList<>();
 
-
         for(String group: groups) {
             users.addAll( userRepository.findByGroupTitle(group));
-
         }
         List<User> filteredUsers;
         if(isLeaderGroup && isCurator){
@@ -145,6 +143,8 @@ public class PostService {
         return post != null ? parsingPostDTO(post) : null;
 
     }
+
+
 
 
 

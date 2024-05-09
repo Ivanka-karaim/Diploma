@@ -18,26 +18,37 @@
         <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
     </div>
 </header>
+<div id="users">
+
+</div>
 <div class="my_container">
     <div class="post_container">
         <div th:if="${isSaved}">
-        <h1 style="margin-top: 30px">Збережені</h1>
-    </div>
+            <h1 style="margin-top: 30px">Збережені</h1>
+        </div>
         <div th:if="${isMyPosts}">
             <h1 style="margin-top: 30px">Мої пости</h1>
         </div>
 
-        <div th:each="el: ${savedPosts}">
+        <div th:each="el: ${posts}">
 
-            <div class="post_block">
+            <div class="post_block" style="margin-top: 30px;">
+                <input type="hidden" th:value="${el.id}" >
                 <div class="flex">
                     <div class="icon_post"><i class="fa-regular fa-user"></i></div>
                     <h2 th:text="${el.author.surname + ' ' + el.author.name}"></h2>
                 </div>
                 <hr class="lineWide">
                 <div class="date" th:text="${#dates.format(el.dateTime, 'dd.MM.yyyy HH:mm')}"></div>
-
-                <h2 th:text="${el.title}"></h2>
+                <div th:if="${isMyPosts}">
+                <div class="flex" style="justify-content: space-between">
+                    <h2 th:text="${el.title}"></h2>
+                    <button th:id="${'watchList-'+el.id}" onclick="openWindow(this)" class="buttonWatchReply"  th:data-id="${el.id}"><p class="textWatchReply">Переглянути кому надіслано</p></button>
+                </div>
+                </div>
+                <div th:if="${isSaved}">
+                    h2 th:text="${el.title}"></h2>
+                </div>
 
                 <p class="text_post" th:text="${el.description}"></p>
 
@@ -69,7 +80,50 @@
     </div>
 </div>
 <script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script>
+    function openWindow() {
 
+    }
+</script>
+<script>
+    function closeModalWindow(){
+        var window = document.getElementById("users");
+        window.style.display = "none";
+        while (window.firstChild) {
+            window.removeChild(window.firstChild);
+        }
+    }
+
+    function openWindow( data){
+        var window = document.getElementById("users");
+        window.style.display = "block";
+        var inProcess = false;
+        var postId = data.getAttribute('data-id');
+            $.ajax({
+                url: './getUserForPost/'+postId,
+                method: 'GET',
+                beforeSend: function () {
+
+                },
+                success: function (response) {
+                    if(!response && !inProcess){
+                        inProcess = true;
+                    }
+                    else {
+                        $('#users').append(response);
+
+                    }
+                }
+            }).done(function (data) {
+
+
+
+            });
+
+
+    }
+</script>
 
 </body>
 </html>
