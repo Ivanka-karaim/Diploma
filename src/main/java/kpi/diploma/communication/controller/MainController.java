@@ -170,6 +170,7 @@ public class MainController {
     @GetMapping("/profile/saved")
     public String saved(@AuthenticationPrincipal UserDetails userDetails, Model model){
         List<PostDTO> savedPosts = postService.getListSaved(userDetails.getUsername());
+        model.addAttribute("posts", savedPosts);
         model.addAttribute("savedPosts", savedPosts);
         model.addAttribute("isSaved", true);
         return "saved";

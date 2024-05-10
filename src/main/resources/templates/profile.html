@@ -62,6 +62,19 @@
                         </a>
                     </div>
                 </div>
+                <div th:if="${isResponsible}">
+                    <div>
+                        <a th:href="@{/addPost}" class="flex button_post">
+                            <div class="comment_save_icon"><i class="fa-solid fa-pen"></i></div>
+                            <div class="comment_save_text">Додати пост для студентів</div>
+                        </a>
+
+                        <a th:href="@{/myPosts}" class="flex button_post">
+                            <div class="comment_save_icon"></i><i class="fa-regular fa-copy"></i></div>
+                            <div class="comment_save_text">Мої пости</div>
+                        </a>
+                    </div>
+                </div>
                 <div class="flex">
                     <div class="vert_line"></div>
                     <div style="margin-left: 20px">
@@ -71,19 +84,28 @@
                                 <div class="comment_save_text">Додати пост для викладачів</div>
                             </a>
                         </div>
-                        <div th:if="${isTeacher || isStudent}">
+<!--                        <div th:if="${isTeacher || isStudent}">-->
+<!--                            <a th:href="@{/profile/saved}" class="flex button_post">-->
+<!--                                <div class="comment_save_icon"><i class="fa-regular fa-bookmark"></i></div>-->
+<!--                                <div class="comment_save_text">Збережені</div>-->
+<!--                            </a>-->
+<!--                        </div>-->
+
+                        <div th:if="${isStudent}">
                             <a th:href="@{/profile/saved}" class="flex button_post">
                                 <div class="comment_save_icon"><i class="fa-regular fa-bookmark"></i></div>
                                 <div class="comment_save_text">Збережені</div>
                             </a>
-                        </div>
-                        <div th:if="${isStudent}">
                             <a th:href="@{/profile/teachers}" class="flex button_post">
                                 <div class="comment_save_icon"><i class="fa-regular fa-user"></i></div>
                                 <div class="comment_save_text">Викладачі</div>
                             </a>
                         </div>
                         <div th:if="${isTeacher}">
+                            <a th:href="@{/profile/saved}" class="flex button_post">
+                                <div class="comment_save_icon"><i class="fa-regular fa-bookmark"></i></div>
+                                <div class="comment_save_text">Збережені</div>
+                            </a>
                             <a th:href="@{/profile/groups}" class="flex button_post">
                                 <div class="comment_save_icon"><i class="fa-regular fa-user"></i></div>
                                 <div class="comment_save_text">Учні</div>

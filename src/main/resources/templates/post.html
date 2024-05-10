@@ -90,7 +90,7 @@
                     <p style="font-size: 18px; margin-bottom: 0" th:text="${el.text}"></p>
                     <button class="button_reply" th:onclick="'openWindowForResponse('+${el.id}+')'">Відповісти</button>
                 </div>
-                </div>
+
                 <div th:if="${el.responseAI!=null}">
                     <div class="response">
                         <div class="flex_space_between">
@@ -107,6 +107,7 @@
                         <p style="font-size: 18px; margin-bottom: 0;color:black" th:text="${el.responseAI.text}"></p>
                     </div>
                 </div>
+
                 <div th:if="${el.responses.size() >0}">
 
                     <button onclick="toggleVisibility(this)" class="flex buttonWatchReply" style="align-items: center" th:data-id="${el.id}">
@@ -137,7 +138,8 @@
                 </div>
             </div>
         </div>
-        <form id="commentForm" th:action="@{/posts/writeComment}" method="post" class="form">
+
+        <form id="commentForm" th:action="@{/posts/writeComment}" method="post" class=" form" >
             <input name="comment" class="input_comment" placeholder="Напишіть ваш коментар">
             <input type="hidden" name="postId" th:value="${post.id}"/>
             <input type="submit" class="button_send_comment" value="Надіслати">
@@ -151,6 +153,7 @@
                 <input type="submit"  class="button_send_comment" value="Надіслати">
             <button id="close" class="button_close" type="button"  onclick="openWindowForResponse()">✖</button>
         </form>
+    </div>
 
 
 
@@ -159,7 +162,7 @@
     </div>
 
 
-</div>
+
 
 
 <!--<div class="media">-->
@@ -196,7 +199,6 @@
 <!--</div>-->
 
 
-</div>
 
 <script >
 

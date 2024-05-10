@@ -30,7 +30,9 @@ public class AIService {
 
     public boolean saveComment(Long postId, String comment, String userEmail){
         PostDTO post = postService.getPostById(postId);
+        System.out.println(comment);
         String profanity = checkProfanity(comment);
+        System.out.println(profanity);
         if(!profanity.trim().equals("Bad")){
             String ai = findAnswer(post.title+" "+post.description, comment);
             if(ai.trim().equals("False")){
