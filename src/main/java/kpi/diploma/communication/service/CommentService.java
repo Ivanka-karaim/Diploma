@@ -5,6 +5,7 @@ import kpi.diploma.communication.data.PostRepository;
 import kpi.diploma.communication.dto.CommentDTO;
 import kpi.diploma.communication.dto.ResponseDTO;
 import kpi.diploma.communication.model.Comment;
+import kpi.diploma.communication.model.Post;
 import kpi.diploma.communication.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,14 @@ public class CommentService {
 
     @Value("${aiID}")
     private String aiID;
+
+    public void removeCommentsByPost(Post post){
+        List<Comment> comments = commentRepository.findCommentsByPostId(post.getId(), null);
+        for(Comment comment:comments){
+            responseService.removeResponse(comment);
+        }
+        commentRepository.deleteCommentsByPost(post);
+    }
 
     public List<CommentDTO> getCommentsForPost(Long postId){
 

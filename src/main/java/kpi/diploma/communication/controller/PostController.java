@@ -69,16 +69,28 @@ public class PostController {
     @GetMapping("/{id}")
     public String getPost(@AuthenticationPrincipal UserDetails userDetails,@PathVariable("id") Long id, @RequestParam(name = "errorMessage", required = false) String errorMessage,  Model model){
         PostDTO post = postService.getPostById(id);
-        model.addAttribute("post",post);
-        List<CommentDTO> commentDTOS = commentService.getCommentsForPost(post.id);
-        model.addAttribute("comments", commentDTOS);
+        boolean checkAccess = postService.checkUserHasAccessForPost(userDetails.getUsername(), id);
+        if(checkAccess) {
+            model.addAttribute("post", post);
+            List<CommentDTO> commentDTOS = commentService.getCommentsForPost(post.id);
+            model.addAttribute("comments", commentDTOS);
 
-        List<PostDTO> savedPosts = postService.getListSaved(userDetails.getUsername());
-        model.addAttribute("savedPosts", savedPosts);
+            List<PostDTO> savedPosts = postService.getListSaved(userDetails.getUsername());
+            model.addAttribute("savedPosts", savedPosts);
 
-        model.addAttribute("aiID", aiID);
-        model.addAttribute("errorMessage", errorMessage);
-        return "post";
+            model.addAttribute("aiID", aiID);
+            model.addAttribute("errorMessage", errorMessage);
+            return "post";
+        }else{
+            return "error";
+        }
+    }
+    @PreAuthorize("hasAnyAuthority('TEACHER','CURATOR', 'RESPONSIBLE')")
+    @PostMapping("/removePost")
+    public String removePost(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(name = "postId") Long postId){
+        postService.removePost(postId, userDetails.getUsername());
+        return "redirect:/myPosts";
+
     }
 
     @GetMapping("/saved/{id}")

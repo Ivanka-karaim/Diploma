@@ -28,6 +28,9 @@ public class ResponseService {
         return parsingResponsesDTO(responses);
 
     }
+    public void removeResponse(Comment comment){
+        responseRepository.deleteResponsesByCommentToWhichReply(comment);
+    }
 
     public boolean saveResponse(String userEmail, String text, Long commentId){
         try {

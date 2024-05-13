@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface ResponseRepository extends CrudRepository<Response, Long> {
     List<Response> findResponsesByCommentToWhichReply(Comment comment, Sort sort);
+    void deleteResponsesByCommentToWhichReply(Comment comment);
 }

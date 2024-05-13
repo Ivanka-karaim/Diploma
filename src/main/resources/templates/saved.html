@@ -18,6 +18,7 @@
         <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
     </div>
 </header>
+
 <div id="users">
 
 </div>
@@ -28,6 +29,9 @@
         </div>
         <div th:if="${isMyPosts}">
             <h1 style="margin-top: 30px">Мої пости</h1>
+        </div>
+        <div th:if="${posts.size()==0}">
+            <h1>Тут пусто</h1>
         </div>
 
         <div th:each="el: ${posts}">
@@ -47,10 +51,20 @@
                 </div>
                 </div>
                 <div th:if="${isSaved}">
-                    h2 th:text="${el.title}"></h2>
+                    <h2 th:text="${el.title}"></h2>
                 </div>
-
+                <div th:if="${isMyPosts}">
+                    <div class="flex" style="justify-content: space-between">
+                        <p class="text_post" th:text="${el.description}"></p>
+                        <form th:action="@{/posts/removePost}" method="post">
+                            <input th:value="${el.id}" name="postId" type="hidden">
+                            <input type="submit"  class="button_reply" value="Видалити">
+                        </form>
+                    </div>
+                </div>
+                <div th:if="${isSaved}">
                 <p class="text_post" th:text="${el.description}"></p>
+                </div>
 
                 <hr class="lineNarrow">
 

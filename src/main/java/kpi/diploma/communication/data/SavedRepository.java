@@ -17,4 +17,6 @@ public interface SavedRepository extends CrudRepository<Saved, Long> {
     @Query("SELECT s.post FROM Saved s WHERE s.user.email = :userEmail")
     List<Post> findPostByUserEmail(@Param("userEmail") String userEmail);
 
+    void deleteSavedsByPost(Post post);
+
 }

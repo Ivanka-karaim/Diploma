@@ -112,8 +112,8 @@
                 <label class="checkbox-container">
                     <input name="isCurator" th:value="${true}" type="checkbox" >Тільки для кураторів<span
                         class="checkmark"></span></label>
-                <input name="title" class="input_post" style="height: 50px; margin-top: 20px" placeholder="Назва">
-                <textarea name="description" rows="5" class="input_post" style="margin-top: 20px;padding:20px" placeholder="Опис"></textarea>
+                <input name="title" class="input_post" style="height: 50px; margin-top: 20px" placeholder="Назва" required>
+                <textarea name="description" rows="5" class="input_post" style="margin-top: 20px;padding:20px" placeholder="Опис" required></textarea>
                 <input type="submit" class="button_send_addPost" style="margin-top: 20px; height:50px" value="Надіслати">
             </div>
         </form>

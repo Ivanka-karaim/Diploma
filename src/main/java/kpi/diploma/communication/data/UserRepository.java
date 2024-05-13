@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, String> {
-    User findByGroupTitleAndRolesContaining(String groupTitle, Role role);
+    List<User> findByGroupTitleAndRolesContaining(String groupTitle, Role role);
 
     List<User> findByGroupTitle(String group);
 

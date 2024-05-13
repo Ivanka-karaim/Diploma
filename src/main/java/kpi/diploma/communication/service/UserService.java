@@ -99,11 +99,12 @@ public class UserService {
     }
 
     public UserDTO getCuratorForUser(String groupTitle){
-        return getUserDTO(userRepository.findByGroupTitleAndRolesContaining(groupTitle, Role.CURATOR));
+        List<User> users = userRepository.findByGroupTitleAndRolesContaining(groupTitle, Role.CURATOR);
+        return getUserDTO(!users.isEmpty()?users.get(0):new User());
     }
 
     public List<UserDTO> getStudentForGroup(String groupTitle){
-        return parseUserListDTO(userRepository.findByGroupTitle(groupTitle));
+        return parseUserListDTO(userRepository.findByGroupTitleAndRolesContaining(groupTitle, Role.STUDENT));
     }
 
     public List<UserDTO> getTeachersForUser(String groupTitle){

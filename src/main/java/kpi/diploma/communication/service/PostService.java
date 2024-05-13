@@ -1,5 +1,6 @@
 package kpi.diploma.communication.service;
 
+import jakarta.transaction.Transactional;
 import kpi.diploma.communication.data.PostForUserRepository;
 import kpi.diploma.communication.data.PostRepository;
 import kpi.diploma.communication.data.SavedRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,18 +39,39 @@ public class PostService {
     @Autowired
     private SavedRepository savedRepository;
 
-    public List<PostDTO> getListSaved(String userEmail){
+    @Autowired
+    private CommentService commentService;
+    @Transactional
+    public void removePost(Long postId, String authorEmail) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post != null && Objects.equals(post.getAuthor().getEmail(), authorEmail)) {
+            savedRepository.deleteSavedsByPost(post);
+            commentService.removeCommentsByPost(post);
+            postForUserRepository.deletePostUserByPost(post);
+            postRepository.delete(post);
+        }else{
+            throw new RuntimeException();
+        }
+    }
+
+    public List<PostDTO> getListSaved(String userEmail) {
         List<Post> posts = savedRepository.findPostByUserEmail(userEmail);
         return parsePostListToDTO(posts);
 
     }
 
+    public boolean checkUserHasAccessForPost(String userEmail, Long postId) {
+        List<PostUser> postUser = postForUserRepository.findByUserEmailAndPostId(userEmail, postId);
+        return !postUser.isEmpty();
 
-    public void savedPost(String userEmail, Long postId){
+    }
+
+
+    public void savedPost(String userEmail, Long postId) {
         Saved savedPost = savedRepository.findByUserEmailAndPostId(userEmail, postId).orElse(null);
-        if(savedPost != null) {
+        if (savedPost != null) {
             savedRepository.delete(savedPost);
-        }else{
+        } else {
             User user = userService.getUserById(userEmail);
             Post post = postRepository.findById(postId).orElse(null);
             if (post != null && user != null) {
@@ -62,7 +85,7 @@ public class PostService {
         }
     }
 
-    private void addPost(String authorEmail, List<User> users,String title, String description ){
+    private void addPost(String authorEmail, List<User> users, String title, String description) {
         User author = userService.getUserById(authorEmail);
         Post post = Post.builder()
                 .author(author)
@@ -72,7 +95,7 @@ public class PostService {
                 .type("IMPORTANT")
                 .build();
         postRepository.save(post);
-        for(User user:users){
+        for (User user : users) {
             PostUser postUser = PostUser.builder()
                     .post(post)
                     .user(user)
@@ -82,9 +105,9 @@ public class PostService {
 
     }
 
-    public void addPostForUsers(String authorEmail,List<String> listUser,String title, String description){
+    public void addPostForUsers(String authorEmail, List<String> listUser, String title, String description) {
         List<User> users = new ArrayList<>();
-        for(String user: listUser){
+        for (String user : listUser) {
             users.add(userService.getUserById(user));
 
         }
@@ -92,40 +115,36 @@ public class PostService {
 
     }
 
-    public void addPostForStudents(String authorEmail,List<String> groups, String title, String description, boolean isLeaderGroup, boolean isCurator){
+    public void addPostForStudents(String authorEmail, List<String> groups, String title, String description, boolean isLeaderGroup, boolean isCurator) {
         List<User> users = new ArrayList<>();
 
-        for(String group: groups) {
-            users.addAll( userRepository.findByGroupTitle(group));
+        for (String group : groups) {
+            users.addAll(userRepository.findByGroupTitle(group));
         }
         List<User> filteredUsers;
-        if(isLeaderGroup && isCurator){
+        if (isLeaderGroup && isCurator) {
             filteredUsers = users.stream()
-                    .filter(user -> user.getRoles().containsAll(List.of(Role.CURATOR, Role.LEADER_GROUP)) )
+                    .filter(user -> user.getRoles().containsAll(List.of(Role.CURATOR, Role.LEADER_GROUP)))
                     .toList();
-        }else if(isCurator){
+        } else if (isCurator) {
             filteredUsers = users.stream()
-                    .filter(user -> user.getRoles().contains(Role.CURATOR) )
+                    .filter(user -> user.getRoles().contains(Role.CURATOR))
                     .toList();
-        } else if(isLeaderGroup){
+        } else if (isLeaderGroup) {
             filteredUsers = users.stream()
-                    .filter(user -> user.getRoles().contains(Role.LEADER_GROUP) )
+                    .filter(user -> user.getRoles().contains(Role.LEADER_GROUP))
                     .toList();
-        }else{
+        } else {
             filteredUsers = users;
         }
         addPost(authorEmail, filteredUsers, title, description);
 
     }
 
-    public List<PostDTO> getPostsForAuthor(String authorEmail){
+    public List<PostDTO> getPostsForAuthor(String authorEmail) {
         List<Post> posts = postRepository.findPostsByAuthorEmailOrderByDateTimeDesc(authorEmail);
         return parsePostListToDTO(posts);
     }
-
-
-
-
 
 
     public List<PostDTO> getPostsForUser(User user, int page) {
@@ -143,9 +162,6 @@ public class PostService {
         return post != null ? parsingPostDTO(post) : null;
 
     }
-
-
-
 
 
     private List<PostDTO> parsePostListToDTO(List<Post> posts) {

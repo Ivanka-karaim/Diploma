@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface CommentRepository  extends CrudRepository<Comment, Long> {
     List<Comment> findCommentsByPostId(Long id, Sort sort);
+    void deleteCommentsByPost(Post post);
 }
