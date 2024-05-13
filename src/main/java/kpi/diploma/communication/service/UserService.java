@@ -1,15 +1,13 @@
 package kpi.diploma.communication.service;
 
+import kpi.diploma.communication.data.MessageRepository;
 import kpi.diploma.communication.data.PostForUserRepository;
 import kpi.diploma.communication.data.UserGroupRepository;
 import kpi.diploma.communication.data.UserRepository;
 import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
-import kpi.diploma.communication.model.Group;
-import kpi.diploma.communication.model.Post;
-import kpi.diploma.communication.model.Role;
-import kpi.diploma.communication.model.User;
+import kpi.diploma.communication.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,9 +30,17 @@ public class UserService {
     @Autowired
     private PostForUserRepository postForUserRepository;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
     @Value("${aiID}")
     private String aiID;
 
+    public List<UserDTO> userListWhichHasNotViewedMessages( String recipientEmail){
+        List<User> users = messageRepository.findUsersByRecipientEmail(recipientEmail);
+        return parseUserListDTO(users);
+
+    }
     public User getAI(){
         User user = userRepository.findById(aiID).orElse(null);
         if(user == null){
@@ -66,6 +72,8 @@ public class UserService {
                 .map(this::getUserDTO)
                 .collect(Collectors.toList());
     }
+
+
 
     public UserDTO getUserDTO(User user){
         return UserDTO.builder().email(user.getEmail())

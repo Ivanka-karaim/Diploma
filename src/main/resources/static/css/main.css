@@ -244,6 +244,19 @@ input[type="checkbox"] {
     box-shadow: none;
 }
 
+.notification_block{
+    margin-right: -20px;
+    margin-top: -5px;
+    z-index: 2;
+
+
+}
+.notification::before{
+    font-size: 30px;
+    color:red;
+}
+
+
 
 
 

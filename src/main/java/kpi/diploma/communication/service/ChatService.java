@@ -46,6 +46,15 @@ public class ChatService {
                 });
     }
 
+    public void markMessageAsViewed(long messageId, String userEmail) {
+        Message message = messageRepository.findById(messageId).orElse(null);
+        System.out.println(message);
+        if (message != null && !message.isViewed() && message.getRecipient().getEmail().equals(userEmail)) {
+            message.setViewed(true);
+            messageRepository.save(message);
+        }
+    }
+
     private Chat createChatId(String user1Email, String user2Email) {
         var chatId = String.format("%s_%s", user1Email, user2Email);
         Chat chat = Chat.builder()
@@ -76,19 +85,24 @@ public class ChatService {
         return chat;
     }
 
-    public ChatMessage save(ChatMessage chatMessage){
+    public Message save(ChatMessage chatMessage){
         var chat = getChatRoom(chatMessage.getSenderId(), chatMessage.getRecipientId())
                 .orElseThrow();
 
         chatMessage.setChatId(chat.getTitle());
+        System.out.println(chatMessage);
         User user = userRepository.findById(chatMessage.getSenderId()).orElseThrow();
+        User recipient = userRepository.findById(chatMessage.getRecipientId()).orElseThrow();
         Message message = Message.builder()
                 .chat(chat)
                 .dateTime(chatMessage.getTimestamp())
                 .text(chatMessage.getText())
-                .user(user).build();
-        messageRepository.save(message);
-        return chatMessage;
+                .user(user)
+                .recipient(recipient)
+                .build();
+
+
+        return messageRepository.save(message);
     }
 
     public List<ChatMessage> findChatMessages(String user1Email, String user2Email){
@@ -102,9 +116,10 @@ public class ChatService {
                         .chatId(chat.getTitle())
                         .id(message.getId())
                         .senderId(message.getUser().getEmail())
-                        .recipientId(Objects.equals(message.getUser().getEmail(), user1Email) ?user2Email:user1Email)
+                        .recipientId(message.getRecipient().getEmail())
                         .timestamp(message.getDateTime())
                         .text(message.getText())
+                        .isViewed(message.isViewed())
                         .build());
             }
             return chatMessages;
@@ -112,6 +127,10 @@ public class ChatService {
         return new ArrayList<>();
 
     }
+
+
+
+
 
 
 

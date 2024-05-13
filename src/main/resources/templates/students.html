@@ -26,10 +26,14 @@
             <div th:each="student:${users}">
                 <div class="block_profile">
                     <h2 th:text="${student.surname + ' ' + student.name +' '+ student.patronymic}"></h2>
-                    <form th:action="@{/openChat}" method="get">
-                        <input type="hidden" name="userId" th:value="${student.email}">
-                        <button type="submit" class="button_send_message">Написати</button>
-                    </form>
+                    <div class="flex">
+                        <div th:if="${#lists.contains(studentsMessages,student)}" class="notification_block icon"><i
+                                class=" fa-solid fa-circle " style="font-size: 30px; color: red"></i></div>
+                        <form th:action="@{/openChat}" method="get">
+                            <input type="hidden" name="userId" th:value="${student.email}">
+                            <button type="submit" class="button_send_message">Написати</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -31,6 +31,13 @@ public class Message {
     @NotNull
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name="recipient_id")
+    @NotNull
+    private User recipient;
+
+    private boolean viewed=false;
+
     @NotNull
     private String text;
 

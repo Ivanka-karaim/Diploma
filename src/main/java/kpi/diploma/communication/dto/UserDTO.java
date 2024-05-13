@@ -26,4 +26,5 @@ public class UserDTO {
     private String group;
     private String speciality;
     private int course;
+    private boolean hasMessage=false;
 }

@@ -12,4 +12,6 @@ public class ChatNotification {
     private String senderId;
     private String recipientId;
     private String text;
+
+    private boolean isViewed;
 }

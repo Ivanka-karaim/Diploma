@@ -51,5 +51,48 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/js/main.js"></script>
 <script src="https://kit.fontawesome.com/1467b92032.js" crossorigin="anonymous"></script>
+<script>
+    function markMessageAsViewed(messageId, userId) {
+        console.log(JSON.stringify(userId));
+        fetch(`/chat/${messageId}/viewed/${encodeURIComponent(userId)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to mark message as viewed');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+    setTimeout(() => {
+        var callback = function (entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const classes = Array.from(entry.target.classList);
+                    if (!classes.includes('sender')) {
+                        const messageId = entry.target.dataset.messageId;
+                        const userId  = entry.target.dataset.userId;
+                        const isViewed  = entry.target.dataset.isViewed;
+                        console.log(isViewed);
+                        if(isViewed === "false") {
+                            
+                            markMessageAsViewed(messageId, userId);
+                        }
+                    }
+
+
+                }
+            })
+        };
+
+
+        const observer = new IntersectionObserver(callback);
+
+        const messageElements = document.querySelectorAll('.message');
+        messageElements.forEach(messageElement => {
+            observer.observe(messageElement);
+        });
+    },1000);
+</script>
 </body>
 </html>

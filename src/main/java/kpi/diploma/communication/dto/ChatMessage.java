@@ -18,4 +18,5 @@ public class ChatMessage {
     private String recipientId;
     private String text;
     private Timestamp timestamp;
+    private boolean isViewed;
 }

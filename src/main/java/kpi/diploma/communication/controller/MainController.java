@@ -67,9 +67,12 @@ public class MainController {
         UserDTO curator = userService.getCuratorForUser(userDTO.getGroup());
         List<UserDTO> teachers = userService.getTeachersForUser(userDTO.getGroup());
 
+        List<UserDTO> teachersWhichHasMessage = userService.userListWhichHasNotViewedMessages(userDetails.getUsername());
+
         model.addAttribute("user", userDTO);
         model.addAttribute("curator", curator);
         model.addAttribute("teachers", teachers);
+        model.addAttribute("teachersMessages", teachersWhichHasMessage);
         return "teachers";
 
     }
@@ -110,9 +113,11 @@ public class MainController {
     }
     @PreAuthorize("hasAnyAuthority('TEACHER','CURATOR', 'RESPONSIBLE')")
     @GetMapping("/getStudentsForGroup")
-    public String getStudentsForGroup( Model model,@RequestParam("groupTitle") String groupTitle){
+    public String getStudentsForGroup(@AuthenticationPrincipal UserDetails userDetails, Model model,@RequestParam("groupTitle") String groupTitle){
         List<UserDTO> users = userService.getStudentForGroup(groupTitle);
         model.addAttribute("users", users);
+        List<UserDTO> studentsWhichHasMessage = userService.userListWhichHasNotViewedMessages(userDetails.getUsername());
+        model.addAttribute("studentsMessages", studentsWhichHasMessage);
         model.addAttribute("groupTitle", groupTitle);
         return "students";
     }
@@ -175,6 +180,7 @@ public class MainController {
         model.addAttribute("isSaved", true);
         return "saved";
     }
+
 
 
 

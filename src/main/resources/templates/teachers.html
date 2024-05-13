@@ -26,12 +26,14 @@
             <hr class="lineWide">
             <div class="block_profile">
                 <h2 th:text="${curator.surname + ' ' + curator.name +' '+ curator.patronymic}"></h2>
-                <form th:action="@{/openChat}" method="get">
-                    <input type="hidden" name="userId" th:value="${curator.email}">
-                    <button type="submit" class="button_send_message">Написати</button>
-
-                </form>
-                <!--                <a class="button_send_message" th:href="@{/openChat?userId=curator.email}">Надіслати</a>-->
+                <div class="flex">
+                    <div th:if="${#lists.contains(teachersMessages,curator)}" class="notification_block icon " ><i
+                            class=" fa-solid fa-circle " style="font-size: 30px; color: red"></i></div>
+                    <form th:action="@{/openChat}" method="get">
+                        <input type="hidden" name="userId" th:value="${curator.email}">
+                        <button type="submit" class="button_send_message">Написати</button>
+                    </form>
+                </div>
             </div>
         </div>
         <div style="height:50px"></div>
@@ -42,10 +44,15 @@
                 <div th:each="teacher:${teachers}">
                     <div class="block_profile">
                         <h2 th:text="${teacher.surname + ' ' + teacher.name +' '+ teacher.patronymic}"></h2>
-                        <form th:action="@{/openChat}" method="get">
-                            <input type="hidden" name="userId" th:value="${teacher.email}">
-                            <button type="submit" class="button_send_message">Написати</button>
-                        </form>
+                        <div class="flex">
+                            <div th:if="${#lists.contains(teachersMessages,teacher)}" class="notification_block icon" ><i
+                                    class=" fa-solid fa-circle " style="font-size: 30px; color: red"></i></div>
+                            <form th:action="@{/openChat}" method="get">
+                                <input type="hidden" name="userId" th:value="${teacher.email}">
+                                <button type="submit" class="button_send_message">Написати</button>
+                            </form>
+
+                        </div>
                     </div>
                 </div>
             </div>
