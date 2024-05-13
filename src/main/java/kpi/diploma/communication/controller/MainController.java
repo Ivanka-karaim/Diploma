@@ -4,6 +4,7 @@ import kpi.diploma.communication.dto.ChatMessage;
 import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
+import kpi.diploma.communication.model.Post;
 import kpi.diploma.communication.model.Role;
 import kpi.diploma.communication.model.User;
 import kpi.diploma.communication.service.ChatService;
@@ -161,9 +162,6 @@ public class MainController {
         }else {
             model.addAttribute("groups", groups);
         }
-
-
-
 
         System.out.println(groups);
 

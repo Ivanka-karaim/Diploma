@@ -1,10 +1,7 @@
 package kpi.diploma.communication.service;
 
 import jakarta.transaction.Transactional;
-import kpi.diploma.communication.data.PostForUserRepository;
-import kpi.diploma.communication.data.PostRepository;
-import kpi.diploma.communication.data.SavedRepository;
-import kpi.diploma.communication.data.UserRepository;
+import kpi.diploma.communication.data.*;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
 import kpi.diploma.communication.model.*;
@@ -41,6 +38,23 @@ public class PostService {
 
     @Autowired
     private CommentService commentService;
+
+
+
+    public void viewPost(Long postId, String userEmail){
+        Post post = postRepository.findById(postId).orElse(null);
+        User user = userService.getUserById(userEmail);
+
+        if(post!=null && user!=null){
+            List<PostUser> views = postForUserRepository.findByUserEmailAndPostId(user.getEmail(), post.getId());
+            for(PostUser view:views){
+                view.setViewed(true);
+                postForUserRepository.save(view);
+            }
+        }else{
+            throw new RuntimeException();
+        }
+    }
     @Transactional
     public void removePost(Long postId, String authorEmail) {
         Post post = postRepository.findById(postId).orElse(null);

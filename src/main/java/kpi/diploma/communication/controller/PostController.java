@@ -62,6 +62,7 @@ public class PostController {
             System.out.println(savedPosts);
             model.addAttribute("savedPosts", savedPosts);
             model.addAttribute("request", request);
+            model.addAttribute("userId", userDetails.getUsername());
         }
         return "posts";
     }
@@ -153,5 +154,10 @@ public class PostController {
     public String addPostForUsers(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("curators") List<String> curators,@RequestParam("teachers") List<String> teachers,@RequestParam("title") String title, @RequestParam("description") String description){
         postService.addPostForUsers(userDetails.getUsername(), Stream.concat(curators.stream(), teachers.stream()).distinct().collect(Collectors.toList()), title, description);
         return "redirect:/myPosts";
+    }
+    @GetMapping("/{postId}/viewed/{userId}")
+    @ResponseBody
+    public void markMessageAsViewed(@PathVariable("postId") Long postId , @PathVariable(name="userId") String userId) {
+        postService.viewPost(postId, userId);
     }
 }

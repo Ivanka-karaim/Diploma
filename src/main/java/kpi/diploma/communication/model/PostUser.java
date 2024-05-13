@@ -29,4 +29,6 @@ public class PostUser {
     @NotNull
     private User user;
 
+    private boolean viewed=false;
+
 }
