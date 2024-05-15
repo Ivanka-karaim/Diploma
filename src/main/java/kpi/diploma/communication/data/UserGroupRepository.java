@@ -15,4 +15,6 @@ public interface UserGroupRepository extends CrudRepository<UserGroup, String> {
     List<User> findUsersByGroupTitle(@Param("groupTitle") String groupTitle, @Param("role") Role role);
     @Query("SELECT ug.group FROM UserGroup ug WHERE ug.user.email = :teacherEmail")
     List<Group> findGroupsByUserEmail(@Param("teacherEmail") String teacherEmail);
+
+    List<UserGroup> findUserGroupsByUserEmailAndGroupTitle(String userEmail, String groupTitle);
 }

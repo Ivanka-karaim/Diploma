@@ -41,6 +41,10 @@ public class UserService {
         return parseUserListDTO(users);
 
     }
+
+    public boolean checkAccessTeacherForGroup(String userEmail, String groupTitle){
+        return !userGroupRepository.findUserGroupsByUserEmailAndGroupTitle(userEmail, groupTitle).isEmpty() || getUserById(userEmail).getGroup().getTitle().equals(groupTitle);
+    }
     public User getAI(){
         User user = userRepository.findById(aiID).orElse(null);
         if(user == null){
@@ -115,9 +119,9 @@ public class UserService {
         }
         return teacherDTOs;
     }
-    public List<UserDTO> getUsersByPost(Long postId){
-        List<User> users = postForUserRepository.findUsersByPost(postId);
-        return parseUserListDTO(users);
+    public List<PostUser> getUsersByPost(Long postId){
+        List<PostUser> users = postForUserRepository.findPostUsersByPostId(postId);
+        return users;
     }
 
     public List<Error> validationData(User user, String passwordRepeat){

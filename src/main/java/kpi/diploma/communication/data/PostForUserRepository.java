@@ -16,6 +16,8 @@ public interface PostForUserRepository extends JpaRepository<PostUser, Long> {
     Optional<List<PostUser>> findPostUsersByUser(User user, Pageable pageable);
     @Query("SELECT pu.user FROM PostUser pu WHERE pu.post.id = :id ")
     List<User> findUsersByPost(@Param("id") Long id);
+
+    List<PostUser> findPostUsersByPostId(Long postId);
     List<PostUser> findByUserEmailAndPostId(String userEmail, Long postId);
 
     void deletePostUserByPost(Post post);

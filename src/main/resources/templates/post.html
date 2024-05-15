@@ -38,10 +38,6 @@
 </div>
 </div>
 <div class="my_container">
-    <a th:href="@{/posts}" class="flex button_post" style="margin-left: 0">
-        <div class="comment_save_icon"><i class="fa-solid fa-arrow-left"></i></div>
-        <div class="comment_save_text">Повернутись на головну</div>
-    </a>
     <div class="post_container">
         <div class="post_block">
             <div class="flex" style="width: 100%">
@@ -138,6 +134,7 @@
                 </div>
             </div>
         </div>
+        <div style="height: 50px"></div>
 
         <form id="commentForm" th:action="@{/posts/writeComment}" method="post" class=" form" >
             <input name="comment" class="input_comment" placeholder="Напишіть ваш коментар">

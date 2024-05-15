@@ -76,7 +76,8 @@ public class PostService {
 
     public boolean checkUserHasAccessForPost(String userEmail, Long postId) {
         List<PostUser> postUser = postForUserRepository.findByUserEmailAndPostId(userEmail, postId);
-        return !postUser.isEmpty();
+        Post post = postRepository.findById(postId).orElse(null);
+        return !postUser.isEmpty() || (post != null && post.getAuthor().getEmail().equals(userEmail));
 
     }
 
@@ -135,6 +136,7 @@ public class PostService {
         for (String group : groups) {
             users.addAll(userRepository.findByGroupTitle(group));
         }
+        System.out.println(users);
         List<User> filteredUsers;
         if (isLeaderGroup && isCurator) {
             filteredUsers = users.stream()
@@ -151,6 +153,7 @@ public class PostService {
         } else {
             filteredUsers = users;
         }
+        System.out.println(filteredUsers);
         addPost(authorEmail, filteredUsers, title, description);
 
     }

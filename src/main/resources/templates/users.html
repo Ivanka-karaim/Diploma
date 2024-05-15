@@ -8,8 +8,14 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div th:each="user:${users}">
-                <div th:text="${user.surname+' '+user.name+' '+user.group}" style="padding: 20px"></div>
+            <div th:each="postUser:${postUsers}" class="flex" style="justify-content: space-around">
+                <div th:text="${postUser.user.surname+' '+postUser.user.name+' '+postUser.user.group.title}" style="padding: 20px"></div>
+                <div th:if="${postUser.isViewed()}">
+                    <i class="fa-solid fa-eye" style="padding: 20px"></i>
+                </div>
+                <div th:if="${!postUser.isViewed()}">
+                    <i class="fa-solid fa-eye-slash" style="padding: 20px"></i>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #FCD95B"

@@ -29,15 +29,14 @@
                     <h2 th:text="${myGroup.title}"></h2>
                     <form th:action="@{/getStudentsForGroup}" method="get">
                         <input type="hidden" name="groupTitle" th:value="${myGroup.title}">
-                        <button type="submit" class="button_watch_list_students">Переглянути список стулентів</button>
+                        <button type="submit" class="button_watch_list_students">Переглянути список студентів</button>
                     </form>
 
                 </div>
             </div>
         </div>
-        <div style="height:50px"></div>
         <div th:if="${groups.size()>0}">
-            <div class="post_block">
+            <div class="post_block" style="margin-top: 50px">
                 <h2>Групи</h2>
                 <hr class="lineWide">
                 <div th:each="group:${groups}">
@@ -45,7 +44,7 @@
                         <h2 th:text="${group.title }"></h2>
                         <form th:action="@{/getStudentsForGroup}" method="get">
                             <input type="hidden" name="groupTitle" th:value="${group.title}">
-                            <button type="submit" class="button_watch_list_students">Переглянути список стулентів
+                            <button type="submit" class="button_watch_list_students">Переглянути список студентів
                             </button>
                         </form>
                     </div>

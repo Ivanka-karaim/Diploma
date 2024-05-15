@@ -4,9 +4,7 @@ import kpi.diploma.communication.dto.ChatMessage;
 import kpi.diploma.communication.dto.GroupDTO;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
-import kpi.diploma.communication.model.Post;
-import kpi.diploma.communication.model.Role;
-import kpi.diploma.communication.model.User;
+import kpi.diploma.communication.model.*;
 import kpi.diploma.communication.service.ChatService;
 import kpi.diploma.communication.service.GroupService;
 import kpi.diploma.communication.service.PostService;
@@ -94,46 +92,54 @@ public class MainController {
     @PreAuthorize("hasAnyAuthority('TEACHER', 'RESPONSIBLE', 'CURATOR')")
     @GetMapping("/getUserForPost/{id}")
     public String getUserForPost(@PathVariable("id") Long id, Model model){
-        List<UserDTO> users = userService.getUsersByPost(id);
-        model.addAttribute("users", users);
+        List<PostUser> users = userService.getUsersByPost(id);
+        model.addAttribute("postUsers", users);
         return "users";
 
     }
-    @PreAuthorize("hasAnyAuthority( 'TEACHER', 'CURATOR')")
+    @PreAuthorize("hasAnyAuthority( 'TEACHER', 'CURATOR', 'RESPONSIBLE')")
     @GetMapping("/profile/groups")
     public String getMyGroups(@AuthenticationPrincipal UserDetails userDetails, Model model){
-        GroupDTO groupDTO = groupService.getMyGroup(userDetails.getUsername());
-
-        model.addAttribute("myGroup", groupDTO);
-
-
-        List<GroupDTO> groupDTOS = groupService.getGroupsForTeacher(userDetails.getUsername());
-        model.addAttribute("groups", groupDTOS);
+        if(userDetails.getAuthorities().contains(Role.RESPONSIBLE)){
+            List<GroupDTO> groupDTOS = groupService.getAllGroups();
+            model.addAttribute("groups", groupDTOS);
+        }else {
+            GroupDTO groupDTO = groupService.getMyGroup(userDetails.getUsername());
+            model.addAttribute("myGroup", groupDTO);
+            List<GroupDTO> groupDTOS = groupService.getGroupsForTeacher(userDetails.getUsername(), false);
+            model.addAttribute("groups", groupDTOS);
+        }
 
         return "groups";
     }
     @PreAuthorize("hasAnyAuthority('TEACHER','CURATOR', 'RESPONSIBLE')")
     @GetMapping("/getStudentsForGroup")
-    public String getStudentsForGroup(@AuthenticationPrincipal UserDetails userDetails, Model model,@RequestParam("groupTitle") String groupTitle){
-        List<UserDTO> users = userService.getStudentForGroup(groupTitle);
-        model.addAttribute("users", users);
-        List<UserDTO> studentsWhichHasMessage = userService.userListWhichHasNotViewedMessages(userDetails.getUsername());
-        model.addAttribute("studentsMessages", studentsWhichHasMessage);
-        model.addAttribute("groupTitle", groupTitle);
-        return "students";
+    public String getStudentsForGroup(@AuthenticationPrincipal UserDetails userDetails, Model model, @RequestParam("groupTitle") String groupTitle){
+        if(userDetails.getAuthorities().contains(Role.RESPONSIBLE) || userService.checkAccessTeacherForGroup(userDetails.getUsername(), groupTitle)) {
+            List<UserDTO> users = userService.getStudentForGroup(groupTitle);
+            model.addAttribute("users", users);
+            List<UserDTO> studentsWhichHasMessage = userService.userListWhichHasNotViewedMessages(userDetails.getUsername());
+            model.addAttribute("studentsMessages", studentsWhichHasMessage);
+            model.addAttribute("groupTitle", groupTitle);
+            return "students";
+        }else{
+            return "error";
+        }
+
     }
 
     @GetMapping("/addPost")
     @PreAuthorize("hasAnyAuthority('TEACHER', 'CURATOR', 'RESPONSIBLE')")
     public String addPost(@AuthenticationPrincipal UserDetails userDetails, Model model,@RequestParam(name = "specialities", required = false) List<String> specialitiesHTML,
                           @RequestParam(name = "courses", required = false) List<Integer> coursesHTML){
+        System.out.println("CoursesHTML");
         System.out.println(coursesHTML);
         User user = userService.getUserById(userDetails.getUsername());
         List<GroupDTO> groups = new ArrayList<>();
         if(user.getRoles().contains(Role.RESPONSIBLE)){
             groups = groupService.getAllGroups();
         }else if(user.getRoles().contains(Role.TEACHER) || user.getRoles().contains(Role.CURATOR)){
-            groups = groupService.getGroupsForTeacher(userDetails.getUsername());
+            groups = groupService.getGroupsForTeacher(userDetails.getUsername(), true);
 
         }
 

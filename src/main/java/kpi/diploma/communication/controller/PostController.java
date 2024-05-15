@@ -134,6 +134,8 @@ public class PostController {
     @PreAuthorize("hasAnyAuthority('TEACHER', 'CURATOR', 'RESPONSIBLE')")
     @PostMapping("/addPost")
     public String addPostForStudents(@AuthenticationPrincipal UserDetails userDetails,@RequestParam("groups") List<String> groups, @RequestParam("title") String title, @RequestParam("description") String description, @RequestParam(name="isLeaderGroup", required = false) boolean isLeaderGroup, @RequestParam(name="isCurator", required = false) boolean isCurator){
+        System.out.println("groups");
+        System.out.println(groups);
         postService.addPostForStudents(userDetails.getUsername(), groups, title, description, isLeaderGroup, isCurator);
         return "redirect:/myPosts";
     }
