@@ -36,10 +36,14 @@ public class UserService {
     @Value("${aiID}")
     private String aiID;
 
-    public List<UserDTO> userListWhichHasNotViewedMessages( String recipientEmail){
+    public List<UserDTO> userListWhichHasNotViewedMessages(String recipientEmail){
         List<User> users = messageRepository.findUsersByRecipientEmail(recipientEmail);
         return parseUserListDTO(users);
 
+    }
+
+    public List<UserDTO> getResponsibles(){
+        return parseUserListDTO(userRepository.findByRolesContaining(Role.RESPONSIBLE));
     }
 
     public boolean checkAccessTeacherForGroup(String userEmail, String groupTitle){

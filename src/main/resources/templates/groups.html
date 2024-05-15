@@ -15,12 +15,25 @@
         <a th:href="@{/}">
             <img class="logo" src="/img/logo.png" alt="Logo">
         </a>
-        <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+        <div>
+            <a class="icon" style="margin-right: 50px" th:href="@{/messages}"><i class="fa-regular fa-message"></i></a>
+            <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+        </div>
     </div>
 </header>
-
 <div class="my_container">
     <div class="post_container">
+        <div class="post_block">
+            <h2>Відповідальні</h2>
+            <hr class="lineWide">
+            <div class="block_profile">
+                <h2> Відповідальні</h2>
+                <form th:action="@{/getResponsibles}" method="get">
+                    <button type="submit" class="button_watch_list_students">Переглянути список відповідальних</button>
+                </form>
+            </div>
+        </div>
+        <div style="height:30px"></div>
         <div th:if="${myGroup!=null}">
         <div class="post_block">
                 <h2>Моя група</h2>

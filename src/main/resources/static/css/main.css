@@ -260,6 +260,31 @@ input[type="checkbox"] {
 }
 
 
+.circle {
+    width: 25px;
+    height: 25px;
+    background-color: #FCD95B;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+.message_block{
+    padding: 20px 50px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 12px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+
+
+}
+.message_block * {
+    margin-left: 0;
+}
 
 
 

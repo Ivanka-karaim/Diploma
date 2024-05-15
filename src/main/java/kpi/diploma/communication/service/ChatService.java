@@ -5,6 +5,8 @@ import kpi.diploma.communication.data.MessageRepository;
 import kpi.diploma.communication.data.ParticipantRepository;
 import kpi.diploma.communication.data.UserRepository;
 import kpi.diploma.communication.dto.ChatMessage;
+import kpi.diploma.communication.dto.PersonalMessage;
+import kpi.diploma.communication.dto.UserDTO;
 import kpi.diploma.communication.model.Chat;
 import kpi.diploma.communication.model.Message;
 import kpi.diploma.communication.model.Participant;
@@ -31,6 +33,9 @@ public class ChatService {
 
     @Autowired
     private MessageRepository messageRepository;
+
+    @Autowired
+    private UserService userService;
     private Optional<Chat> getChatRoom(
             String user1Email,
             String user2Email
@@ -125,6 +130,24 @@ public class ChatService {
             return chatMessages;
         }
         return new ArrayList<>();
+
+    }
+
+    public List<PersonalMessage> getMessages(String userEmail){
+        List<PersonalMessage> personalMessages = new ArrayList<>();
+        List<Message> messages = messageRepository.findMessagesByUserEmailAndGroupChatAndSortTime(userEmail);
+        for(Message message: messages){
+            personalMessages.add(PersonalMessage.builder()
+                    .id(message.getId())
+                    .user(userService.getUserDTO(message.getRecipient().getEmail().equals(userEmail)?message.getUser():message.getRecipient()))
+                    .dateTime(message.getDateTime())
+                    .text(message.getText())
+                    .countUnreadMessage(messageRepository.getCountUnReadMessage(userEmail, message.getChat().getId()))
+                    .build());
+
+        }
+
+        return personalMessages;
 
     }
 

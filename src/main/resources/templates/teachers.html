@@ -15,24 +15,49 @@
         <a th:href="@{/}">
             <img class="logo" src="/img/logo.png" alt="Logo">
         </a>
-        <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+        <div>
+            <a class="icon" style="margin-right: 50px" th:href="@{/messages}"><i class="fa-regular fa-message"></i></a>
+            <a class="icon" th:href="@{/profile}"><i class="fa-regular fa-user"></i></a>
+        </div>
     </div>
 </header>
 
 <div class="my_container">
     <div class="post_container">
-        <div class="post_block">
-            <h2>Куратор</h2>
-            <hr class="lineWide">
-            <div class="block_profile">
-                <h2 th:text="${curator.surname + ' ' + curator.name +' '+ curator.patronymic}"></h2>
-                <div class="flex">
-                    <div th:if="${#lists.contains(teachersMessages,curator)}" class="notification_block icon " ><i
-                            class=" fa-solid fa-circle " style="font-size: 30px; color: red"></i></div>
-                    <form th:action="@{/openChat}" method="get">
-                        <input type="hidden" name="userId" th:value="${curator.email}">
-                        <button type="submit" class="button_send_message">Написати</button>
-                    </form>
+        <div th:if="${isStudent}">
+            <div class="post_block">
+                <h2>Куратор</h2>
+                <hr class="lineWide">
+                <div class="block_profile">
+                    <h2 th:text="${curator.surname + ' ' + curator.name +' '+ curator.patronymic}"></h2>
+                    <div class="flex">
+                        <div th:if="${#lists.contains(teachersMessages,curator)}" class="notification_block icon "><i
+                                class=" fa-solid fa-circle " style="font-size: 30px; color: red"></i></div>
+                        <form th:action="@{/openChat}" method="get">
+                            <input type="hidden" name="userId" th:value="${curator.email}">
+                            <button type="submit" class="button_send_message">Написати</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${isResponsible}">
+            <div class="post_block">
+                <h2>Куратори</h2>
+                <hr class="lineWide">
+                <div th:each="curator: ${curators}">
+                    <div class="block_profile">
+                        <h2 th:text="${curator.surname + ' ' + curator.name +' '+ curator.patronymic}"></h2>
+                        <div class="flex">
+                            <div th:if="${#lists.contains(teachersMessages,curator)}"
+                                 class="notification_block icon "><i
+                                    class=" fa-solid fa-circle " style="font-size: 30px; color: red"></i></div>
+                            <form th:action="@{/openChat}" method="get">
+                                <input type="hidden" name="userId" th:value="${curator.email}">
+                                <button type="submit" class="button_send_message">Написати</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,7 +70,8 @@
                     <div class="block_profile">
                         <h2 th:text="${teacher.surname + ' ' + teacher.name +' '+ teacher.patronymic}"></h2>
                         <div class="flex">
-                            <div th:if="${#lists.contains(teachersMessages,teacher)}" class="notification_block icon" ><i
+                            <div th:if="${#lists.contains(teachersMessages,teacher)}"
+                                 class="notification_block icon"><i
                                     class=" fa-solid fa-circle " style="font-size: 30px; color: red"></i></div>
                             <form th:action="@{/openChat}" method="get">
                                 <input type="hidden" name="userId" th:value="${teacher.email}">
