@@ -36,8 +36,8 @@
                 <div class="date" th:text="${#dates.format(el.dateTime, 'dd.MM.yyyy HH:mm')}"></div>
 
                 <h2 th:text="${el.title}"></h2>
+                <p class="text_post" th:text="${#strings.length(el.description) &gt; 300 ? #strings.substring(el.description, 0, 300) + '...' : el.description}"></p>
 
-                <p class="text_post" th:text="${el.description}"></p>
 
                 <hr class="lineNarrow">
 

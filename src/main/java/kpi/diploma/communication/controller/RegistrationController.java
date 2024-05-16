@@ -36,10 +36,8 @@ public class RegistrationController {
             model.addAttribute("error", "User exist");
             return "registration";
         }
-        user.setRoles(Set.of( Role.CURATOR, Role.TEACHER));
-
+        user.setRoles(Set.of( Role.TEACHER));
         model.addAttribute("errors", userService.validationData(user, passwordRepeat));
-
         userRepository.save(user);
         return "redirect:/login";
     }

@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 @Service
 public class AIService {
-
 
 
     @Autowired
@@ -27,35 +27,34 @@ public class AIService {
     private ResponseService responseService;
 
 
-
-    public boolean saveComment(Long postId, String comment, String userEmail){
+    public boolean saveComment(Long postId, String comment, String userEmail) {
         PostDTO post = postService.getPostById(postId);
         System.out.println(comment);
         String profanity = checkProfanity(comment);
         System.out.println(profanity);
-        if(!profanity.trim().equals("Bad")){
-            String ai = findAnswer(post.title+" "+post.description, comment);
-            if(ai.trim().equals("False")){
+        if (!profanity.trim().contains("Bad")) {
+            String ai = findAnswer(post.title + " " + post.description, comment);
+            if (ai.trim().contains("False")) {
                 commentService.saveComment(userEmail, comment, postId);
-            }else {
+            } else {
                 Comment commentObject = commentService.saveComment(userEmail, comment, postId);
                 User AI = userService.getAI();
                 responseService.saveResponse(AI.getEmail(), ai.trim(), commentObject.getId());
             }
             return true;
-        }else{
+        } else {
             return false;
         }
 
     }
 
-    public boolean saveResponse(Long commentId, String text, String userEmail){
+    public boolean saveResponse(Long commentId, String text, String userEmail) {
         String ai = checkProfanity(text);
-        if(!ai.trim().equals("Bad")){
+        if (!ai.trim().equals("Bad")) {
             System.out.println("Good");
             responseService.saveResponse(userEmail, text, commentId);
             return true;
-        }else{
+        } else {
             return false;
         }
 
@@ -81,21 +80,33 @@ public class AIService {
             writer.flush();
             writer.close();
             System.out.println(connection.getResponseCode());
+            System.out.println(connection.getErrorStream());
 
 
-            // Response from ChatGPT
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-
-            StringBuffer response = new StringBuffer();
-
-            while ((line = br.readLine()) != null) {
-                response.append(line);
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 200) {
+                // Response from ChatGPT
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                StringBuffer response = new StringBuffer();
+                while ((line = br.readLine()) != null) {
+                    response.append(line);
+                }
+                br.close();
+                // calls the method to extract the message.
+                return extractMessageFromJSONResponse(response.toString());
+            } else {
+                // Handle error response
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                String errorMessage;
+                StringBuffer errorResponse = new StringBuffer();
+                while ((errorMessage = errorReader.readLine()) != null) {
+                    errorResponse.append(errorMessage);
+                }
+                errorReader.close();
+                System.out.println(errorResponse);
+                return "Error response from ChatGPT API: " + errorResponse.toString();
             }
-            br.close();
-
-            // calls the method to extract the message.
-            return extractMessageFromJSONResponse(response.toString());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -103,7 +114,7 @@ public class AIService {
     }
 
     public static String extractMessageFromJSONResponse(String response) {
-        int start = response.indexOf("content")+ 11;
+        int start = response.indexOf("content") + 11;
 
         int end = response.indexOf("\"", start);
 
@@ -111,16 +122,18 @@ public class AIService {
 
     }
 
-    public String findAnswer(String post, String question){
+    public String findAnswer(String post, String question) {
+        System.out.println(post);
+        System.out.println(question);
         return chatGPT("Виконай завдання, я надсилаю текст і питання. Якщо ти знаходиш відповідь на це питання " +
-                "в тексті, то надсилаєш відповідь, якщо не знаходиш, то просто надсилай ключове слово False. " +
-                "Текст:  "+post+"Питання: "+question);
+                "в тексті, то надсилаєш відповідь, якщо не знаходиш відповіді на запитання, то просто надсилай ключове слово False. " +
+                "Текст:  " + post + "Питання: " + question);
 
     }
 
-    private String checkProfanity(String response){
-        return chatGPT("Виконай завдання, я надсилаю текст  Якщо ти знаходиш ненормативну лесику, то надсилай ключове слово Bad. Якщо все добре, то надсилай ключове слово Good." +
-                "Текст:  "+response);
+    private String checkProfanity(String response) {
+        return chatGPT("Виконай завдання, я надсилаю текст  Якщо ти знаходиш матюки, то надсилай ключове слово Bad. Якщо все добре, то надсилай ключове слово Good." +
+                "Текст:  " + response);
 
     }
 

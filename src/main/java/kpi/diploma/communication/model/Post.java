@@ -29,6 +29,7 @@ public class Post {
     private Timestamp dateTime;
 
     @NotNull
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @NotNull

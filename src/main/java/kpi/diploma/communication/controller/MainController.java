@@ -153,6 +153,8 @@ public class MainController {
                           @RequestParam(name = "courses", required = false) List<Integer> coursesHTML) {
         System.out.println("CoursesHTML");
         System.out.println(coursesHTML);
+
+        
         User user = userService.getUserById(userDetails.getUsername());
         List<GroupDTO> groups = new ArrayList<>();
         if (user.getRoles().contains(Role.RESPONSIBLE)) {
