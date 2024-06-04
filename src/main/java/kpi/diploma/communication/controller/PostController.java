@@ -1,6 +1,7 @@
 package kpi.diploma.communication.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kpi.diploma.communication.dto.AnswerAI;
 import kpi.diploma.communication.dto.CommentDTO;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.dto.UserDTO;
@@ -109,10 +110,12 @@ public class PostController {
     @PostMapping("/writeComment")
     public String writeComment(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("comment") String comment, @RequestParam("postId") Long postId, RedirectAttributes redirectAttributes){
         System.out.println(1111111);
-        boolean answer = aiService.saveComment(postId,comment,userDetails.getUsername());
+        AnswerAI answer = aiService.saveComment(postId,comment,userDetails.getUsername());
         System.out.println(answer);
-        if(!answer){
+        if(answer==AnswerAI.BAD_TEXT){
             redirectAttributes.addAttribute("errorMessage", "Ви вживаєте ненормативну лексику, тому ваш коментар не було додано!!!");
+        }else if(answer==AnswerAI.GENERATED_ANSWER){
+            redirectAttributes.addAttribute("errorMessage", "На ваш коментар було згенеровано відповідь штучним інтелектом!!! Ця відповідь не є достовірною!");
         }
         return "redirect:/posts/"+postId;
     }

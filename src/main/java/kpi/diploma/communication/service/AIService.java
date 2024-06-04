@@ -1,5 +1,6 @@
 package kpi.diploma.communication.service;
 
+import kpi.diploma.communication.dto.AnswerAI;
 import kpi.diploma.communication.dto.PostDTO;
 import kpi.diploma.communication.model.Comment;
 import kpi.diploma.communication.model.User;
@@ -27,7 +28,7 @@ public class AIService {
     private ResponseService responseService;
 
 
-    public boolean saveComment(Long postId, String comment, String userEmail) {
+    public AnswerAI saveComment(Long postId, String comment, String userEmail) {
         PostDTO post = postService.getPostById(postId);
         System.out.println(comment);
         String profanity = checkProfanity(comment);
@@ -36,14 +37,15 @@ public class AIService {
             String ai = findAnswer(post.title + " " + post.description, comment);
             if (ai.trim().contains("False")) {
                 commentService.saveComment(userEmail, comment, postId);
+                return AnswerAI.NOT_GENERATED_ANSWER;
             } else {
                 Comment commentObject = commentService.saveComment(userEmail, comment, postId);
                 User AI = userService.getAI();
                 responseService.saveResponse(AI.getEmail(), ai.trim(), commentObject.getId());
             }
-            return true;
+            return AnswerAI.GENERATED_ANSWER;
         } else {
-            return false;
+            return AnswerAI.BAD_TEXT;
         }
 
     }
@@ -137,9 +139,4 @@ public class AIService {
 
     }
 
-//    public static void main(String[] args) {
-//
-//        System.out.println(chatGPT("Виконай завдання, я надсилаю текст і питання. Якщо ти знаходиш відповідь на це питання в тексті, то надсилаєш відповідь, якщо не знаходиш, то просто надсилай ключове слово False, якщо у запитанні знаходиш ненормативну лесику, то надсилай ключове слово Bad.Текст:  Ректорський контроль відбудеється 25.04.2024 о 20:00 на сайті кпі. Просимо всі учасників приєднатись і не забути натиснути кнопку надіслати. Успіхів!Питання: Коли це буде?Блять"));
-//
-//    }
 }
